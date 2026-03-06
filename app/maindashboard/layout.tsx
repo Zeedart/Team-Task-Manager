@@ -5,8 +5,10 @@ import { SettingsIcon } from "@/components/ui/settings-icon"
 import { Button } from "@/components/ui/button"
 import { routes } from "./data/routes.js"
 import { projectRoutes } from "./data/projects.js"
+import {tasks} from "./data/tasks.js"
 import { usePathname } from "next/navigation"
 import LOGO from "@/images/LOGO.svg"
+import {BoxIcon} from "@/components/ui/box-icon"
 
 //{routes.map(route => (
 //<li key={route.id} className="text-lg font-medium text-[#172b4d] hover:text-[#1868db] cursor-pointer">
@@ -69,6 +71,18 @@ export default function MainLayout({
                                             {route.name}
                                         </li>
                                     </Link>
+                                )
+                            })}
+                        </ul>
+                    </nav>
+                    <nav className="ml-5 pt-2 pl-5 pr-5">
+                        <h1 className="text-md font-semibold text-gray-700 mb-2">tasks</h1>
+                        <ul className="ml-5">
+                            {tasks.slice(0, 3).map(task => {
+                                return (
+                                    <li key={task.id} className="text-[#172b4d] text-lg p-2 rounded-sm font-medium hover:text-[#1868db] cursor-pointer">
+                                        <BoxIcon size={20} className="mr-2"/>{task.title}
+                                    </li>
                                 )
                             })}
                         </ul>
