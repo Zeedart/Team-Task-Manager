@@ -16,6 +16,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { ChevronRightIcon } from "lucide-react"
+import Link from "next/link"
 
 export function NavMain({
   items,
@@ -42,7 +43,7 @@ export function NavMain({
             render={<SidebarMenuItem />}
           >
             <CollapsibleTrigger
-              render={<SidebarMenuButton tooltip={item.title} />}
+              render={<SidebarMenuButton render={<Link href={item.url} />} tooltip={item.title} />}
             >
               {item.icon}
               <span>{item.title}</span>

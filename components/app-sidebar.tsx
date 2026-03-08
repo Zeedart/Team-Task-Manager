@@ -17,6 +17,7 @@ import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIco
 import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
+import { projectRoutes  } from "../app/dashboard/data/projects.js"
 
 // This is sample data.
 const data = {
@@ -54,40 +55,19 @@ const data = {
   navMain: [
     {
       title: "Projects",
-      url: "./projects",
+      url: "/dashboard/projects",
       icon: (
         <RocketIcon
         />
       ),
       isActive: true,
-      items: [
-        {
-          title: "Mobile App",
-          url: "./projects/mobile-app",
-        },
-        {
-          title: "Web App",
-          url: "./projects/web-app",
-        },
-        {
-          title: "Design System",
-          url: "./projects/design-system",
-        },
-        {
-          title: "Wireframes",
-          url: "./projects/wireframes",
-        },
-        {
-          title: "Documentation",
-          url: "./projects/documentation",
-        }
-      ],
+      items: projectRoutes
     },
   ],
   dashboard: [
     {
       name: "Home",
-      url: "./dashboard",
+      url: "/dashboard",
       icon: (
         <BoxIcon
         />
@@ -97,7 +77,7 @@ const data = {
   tasks: [
     {
       name: "Tasks",
-      url: "./dashboard/tasks",
+      url: "/dashboard/tasks",
       icon: (
         <LayersIcon
         />

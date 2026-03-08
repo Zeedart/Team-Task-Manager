@@ -1,53 +1,53 @@
 export const projectRoutes = [
     {
         id: 1,
-        name: 'Mobile App',
-        path: '/projects/MobileApp'
+        title: 'Mobile App',
+        url: '/dashboard/projects/mobile-app'
     },
     {
         id: 2,
-        name: 'Web App',
-        path: '/projects/WebApp'
+        title: 'Web App',
+        url: '/dashboard/projects/WebApp'
 
     },
     {
         id: 3,
-        name: 'Design System',
-        path: '/projects/DesignSystem'
+        title: 'Design System',
+        url: '/dashboard/projects/DesignSystem'
     },
     {
         id: 4,
-        name: 'Wireframes',
-        path: '/projects/Wireframes'
+        title: 'Wireframes',
+        url: '/dashboard/projects/Wireframes'
     },
     {
         id: 5,
-        name: 'Marketing',
-        path: '/projects/Marketing'
+        title: 'Marketing',
+        url: '/dashboard/projects/Marketing'
     },
     {
         id: 6,
-        name: 'E-commerce',
-        path: '/projects/E-commerce'
+        title: 'E-commerce',
+        url: '/dashboard/projects/E-commerce'
     },
     {
         id: 7,
-        name: 'Social Media',
-        path: '/projects/SocialMedia'
+        title: 'Social Media',
+        url: '/dashboard/projects/SocialMedia'
     },
     {
         id: 8,
-        name: 'Analytics',
-        path: '/projects/Analytics'
+        title: 'Analytics',
+        url: '/dashboard/projects/Analytics'
     },
     {
         id: 9,
-        name: 'Customer Support',
-        path: '/projects/CustomerSupport'
+        title: 'Customer Support',
+        url: '/dashboard/projects/CustomerSupport'
     },
     {
         id: 10,
-        name: 'HR Management',
-        path: '/projects/HRManagement'
+        title: 'HR Management',
+        url: '/dashboard/projects/HRManagement'
     }
 ]
