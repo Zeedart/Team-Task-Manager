@@ -5,13 +5,13 @@ export const routes = [
         
         id: 1,
         icon: DashboardIcon,
-        name: 'Dashboard',
-        path: '/maindashboard',
+        name: 'Home',
+        path: '/dashboard',
     },
     {
         id: 2,
         icon: RocketIcon,
         name: 'Projects',
-        path: '/maindashboard/projects',
+        path: '/dashboard/projects',
     }
 ]

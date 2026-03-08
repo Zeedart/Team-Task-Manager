@@ -4,7 +4,7 @@ import Login from "../components/login";
 export default function Page() {
     const loggedIn = true; // Simulate authentication status
     if (loggedIn) {
-        return redirect("/maindashboard");
+        return redirect("/dashboard");
     }
 
     return (
