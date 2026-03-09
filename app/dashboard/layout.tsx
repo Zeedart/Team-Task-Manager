@@ -58,10 +58,22 @@ export default function MainLayout({
     const breadcrumbs = pathname
         .split("/")
         .filter(Boolean)
-        .map((segment, index, array) => ({
-            label: segment.replace(/-/g, " "),
-            href: "/" + array.slice(0, index + 1).join("/"),
-        }))
+        .map((segment, index, array) => {
+            let label = segment.replace(/-/g, " ");
+
+            // Check if the segment is a number (dynamic project ID)
+            if (!isNaN(Number(segment))) {
+                const project = projectRoutes.find(p => p.id === Number(segment));
+                if (project) {
+                    label = project.title; // Replace ID with project title
+                }
+            }
+
+            return {
+                label,
+                href: "/" + array.slice(0, index + 1).join("/"),
+            };
+        });
 
 
     return (
