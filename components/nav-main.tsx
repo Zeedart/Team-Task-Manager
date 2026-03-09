@@ -27,6 +27,7 @@ export function NavMain({
     icon?: React.ReactNode
     isActive?: boolean
     items?: {
+      id: number
       title: string
       url: string
     }[]
@@ -42,19 +43,28 @@ export function NavMain({
             className="group/collapsible"
             render={<SidebarMenuItem />}
           >
-            <CollapsibleTrigger
-              render={<SidebarMenuButton render={<Link href={item.url} />} tooltip={item.title} />}
-            >
+            <SidebarMenuButton tooltip={item.title}>
               {item.icon}
-              <span>{item.title}</span>
-              <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-open/collapsible:rotate-90" />
-            </CollapsibleTrigger>
+
+              <Link href={item.url} className="flex-1 text-left">
+                {item.title}
+              </Link>
+
+              <CollapsibleTrigger asChild>
+                <button className="ml-auto">
+                  <ChevronRightIcon className="transition-transform duration-200 group-data-open/collapsible:rotate-90" />
+                </button>
+              </CollapsibleTrigger>
+            </SidebarMenuButton>
+
             <CollapsibleContent>
               <SidebarMenuSub>
                 {item.items?.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton render={<a href={subItem.url} />}>
-                      <span>{subItem.title}</span>
+                    <SidebarMenuSubButton asChild>
+                      <Link key={subItem.id} href={subItem.url}>
+                        {subItem.title}
+                      </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 ))}
