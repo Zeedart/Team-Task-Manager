@@ -63,8 +63,6 @@ export default function MainLayout({
             href: "/" + array.slice(0, index + 1).join("/"),
         }))
 
-    console.log("Current Pathname:", pathname, typeof pathname)
-
 
     return (
         <div>
@@ -91,10 +89,10 @@ export default function MainLayout({
                 <div className="h-15 border-b border-gray-300 flex p-5 gap-4 items-center">
                     <Button>+ Create Project</Button>
                     <SettingsIcon size={30} className="hover:text-[#1868db] transition-colors duration-500" />
-                    <img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250" alt="Profile Picture" className="w-10 h-10 rounded-full" />
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Profile Picture" className="w-10 h-10 rounded-full" />
                 </div>
             </header>
-            <div className="flex h-full">
+            <div className="flex h-full w-full">
                 <SidebarProvider>
                     <AppSidebar />
                 </SidebarProvider>

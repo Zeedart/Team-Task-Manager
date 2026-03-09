@@ -1,58 +1,32 @@
 export const tasks = [
-  {
-    id: 1,
-    title: "Design login page",
-    status: "pending",
-    projectId: 1,
-    assignedTo: 2
-  },
-  {
-    id: 2,
-    title: "Setup database schema",
-    status: "in-progress",
-    projectId: 1,
-    assignedTo: 1
-  },
-  {
-    id: 3,
-    title: "Implement authentication",
-    status: "pending",
-    projectId: 2,
-    assignedTo: 3
-  },
-  {
-    id: 4,
-    title: "Create dashboard UI",
-    status: "completed",
-    projectId: 2,
-    assignedTo: 2
-  },
-  {
-    id: 5,
-    title: "Add project creation form",
-    status: "in-progress",
-    projectId: 3,
-    assignedTo: 1
-  },
-  {
-    id: 6,
-    title: "Fix navbar responsiveness",
-    status: "pending",
-    projectId: 1,
-    assignedTo: 3
-  },
-  {
-    id: 7,
-    title: "Implement task filtering",
-    status: "completed",
-    projectId: 3,
-    assignedTo: 2
-  },
-  {
-    id: 8,
-    title: "Add drag and drop tasks",
-    status: "pending",
-    projectId: 2,
-    assignedTo: 1
-  }
-]
+  { id: 1, title: "Design login page", status: "Pending", projectId: 1, assignedTo: 2 },
+  { id: 2, title: "Setup database schema", status: "In Progress", projectId: 1, assignedTo: 1 },
+  { id: 3, title: "Implement authentication", status: "Pending", projectId: 2, assignedTo: 3 },
+  { id: 4, title: "Create dashboard UI", status: "Completed", projectId: 2, assignedTo: 2 },
+  { id: 5, title: "Add project creation form", status: "In Progress", projectId: 3, assignedTo: 1 },
+  { id: 6, title: "Fix navbar responsiveness", status: "Pending", projectId: 1, assignedTo: 3 },
+  { id: 7, title: "Implement task filtering", status: "Completed", projectId: 3, assignedTo: 2 },
+  { id: 8, title: "Add drag and drop tasks", status: "Pending", projectId: 2, assignedTo: 1 },
+  { id: 9, title: "Write unit tests for login", status: "Pending", projectId: 1, assignedTo: 2 },
+  { id: 10, title: "Optimize SQL queries", status: "In Progress", projectId: 1, assignedTo: 3 },
+  { id: 11, title: "Set up CI/CD pipeline", status: "Pending", projectId: 2, assignedTo: 1 },
+  { id: 12, title: "Create user profile page", status: "Completed", projectId: 2, assignedTo: 2 },
+  { id: 13, title: "Add email notifications", status: "In Progress", projectId: 3, assignedTo: 3 },
+  { id: 14, title: "Implement role-based access", status: "Pending", projectId: 3, assignedTo: 1 },
+  { id: 15, title: "Fix mobile layout issues", status: "Completed", projectId: 1, assignedTo: 2 },
+  { id: 16, title: "Integrate third-party API", status: "Pending", projectId: 2, assignedTo: 3 },
+  { id: 17, title: "Add search functionality", status: "In Progress", projectId: 3, assignedTo: 1 },
+  { id: 18, title: "Refactor CSS for consistency", status: "Pending", projectId: 2, assignedTo: 2 },
+  { id: 19, title: "Create landing page", status: "Completed", projectId: 1, assignedTo: 3 },
+  { id: 20, title: "Set up analytics tracking", status: "Pending", projectId: 3, assignedTo: 2 },
+  { id: 21, title: "Implement dark mode toggle", status: "In Progress", projectId: 2, assignedTo: 1 },
+  { id: 22, title: "Add multi-language support", status: "Pending", projectId: 1, assignedTo: 2 },
+  { id: 23, title: "Fix broken links", status: "Completed", projectId: 3, assignedTo: 3 },
+  { id: 24, title: "Update README documentation", status: "Pending", projectId: 2, assignedTo: 1 },
+  { id: 25, title: "Add user onboarding tutorial", status: "In Progress", projectId: 1, assignedTo: 3 },
+  { id: 26, title: "Implement password reset flow", status: "Pending", projectId: 3, assignedTo: 2 },
+  { id: 27, title: "Optimize image loading", status: "Completed", projectId: 2, assignedTo: 1 },
+  { id: 28, title: "Setup automated backups", status: "Pending", projectId: 1, assignedTo: 2 },
+  { id: 29, title: "Implement comment system", status: "In Progress", projectId: 3, assignedTo: 3 },
+  { id: 30, title: "Add user activity logs", status: "Pending", projectId: 2, assignedTo: 1 }
+];
