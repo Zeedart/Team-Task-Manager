@@ -34,7 +34,7 @@ export default async function ProjectDetails({
 
   const { id, title, url, createdOn } = project;
   const pending = projectTasks.filter(
-    task => task.status == "Pending"
+    task => task.status == "In Review"
   )
 
   const inProgress = projectTasks.filter(
@@ -59,8 +59,8 @@ export default async function ProjectDetails({
       </header>
       <div className="mt-6 w-full ml-6 grid gap-4 h-60 md:grid-cols-2 lg:grid-cols-5">
         <ProjectBoard status="To do" tasks={curUserTasks} />
-        <ProjectBoard status="Pending" tasks={pending} />
         <ProjectBoard status="In Progress" tasks={inProgress} />
+        <ProjectBoard status="In Review" tasks={pending} />
         <ProjectBoard status="Completed" tasks={completed} />
       </div>
     </div>

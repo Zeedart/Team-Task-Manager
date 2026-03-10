@@ -15,7 +15,7 @@ export default function TaskCard({ task, users }: {
             text: "text-blue-800",
             border: "border-blue-300",
         },
-        "Pending": {
+        "In Review": {
             bg: "bg-yellow-100",
             text: "text-yellow-800",
             border: "border-yellow-300",

@@ -18,6 +18,8 @@ import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
 import { projectRoutes  } from "../app/dashboard/data/projects.js"
+import LOGO from "@/images/LOGO.svg"
+import Image from 'next/image';
 
 // This is sample data.
 const data = { 
@@ -91,7 +93,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <div className="ml-5 flex space-x-10 items-center-safe">
+          <Image src={LOGO} alt="logo" width={37} height={35}/>
+          <p className="font-bold text-[30px] text-[#172b4d]">Taskora</p>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavProjects items={data.dashboard} />

@@ -1,7 +1,7 @@
 export type Task = {
   id: number;
   title: string;
-  status?: "Pending" | "In Progress" | "Completed";  // restrict to these values
+  status?: "In Review" | "In Progress" | "Completed";  // restrict to these values
   projectId?: number;
   assignedTo: number;   // user id
 };
