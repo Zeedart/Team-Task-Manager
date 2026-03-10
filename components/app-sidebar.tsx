@@ -20,11 +20,12 @@ import { RocketIcon } from "@/components/ui/rocket-icon"
 import { projectRoutes  } from "../app/dashboard/data/projects.js"
 
 // This is sample data.
-const data = {
+const data = { 
   user: {
-    name: "shadcn",
+    id: 1,
+    username: "John Doe",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    img: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   teams: [
     {

@@ -17,7 +17,7 @@ export default async function ProjectDetails({
   const currentuser = 1
 
   const curUserTasks = tasks.filter(
-    task => task.assignedTo == currentuser && task.projectId == project?.id
+    task => task.assignedTo == currentuser && task.projectId == project?.id && task.status != "Completed"
   )
 
   const projectTasks = tasks.filter(

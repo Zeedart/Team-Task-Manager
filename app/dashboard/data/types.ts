@@ -6,7 +6,7 @@ export type Task = {
   assignedTo: number;   // user id
 };
 
-export type User = {
+export type Users = {
   id: number;
   username: string;
   img: string;
