@@ -118,7 +118,7 @@ export default function MainLayout({
                                     <BreadcrumbItem>
 
                                         {index === breadcrumbs.length - 1 ? (
-                                            <BreadcrumbPage>
+                                            <BreadcrumbPage className="text-primary font-semibold">
                                                 {crumb.label}
                                             </BreadcrumbPage>
                                         ) : (

@@ -35,7 +35,8 @@ export default function ProjectCard({ project }: Project) {
         ) / totalTasks * 100
 
     return (
-        <div className="border flex w-90 gap-2 flex-col rounded-lg p-6">
+        <div className="border flex w-90 gap-2 flex-col rounded-lg p-6 transition-all duration-200 cursor-pointer
+hover:shadow-lg hover:-translate-y-1 hover:border-blue-400 bg-white">
             <div>
                 <h1 className="font-semibold text-lg text-[#172b4d]">{project.title}</h1>
                 <h2 className="text-gray-500 text-sm">{project.createdOn}</h2>
