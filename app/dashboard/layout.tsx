@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { SettingsIcon } from "@/components/ui/settings-icon"
 import { Button } from "@/components/ui/button"
-import { routes } from "./data/routes.js"
 import { projectRoutes } from "./data/projects.js"
 import { tasks } from "./data/tasks.js"
 import { usePathname } from "next/navigation"
@@ -11,14 +10,6 @@ import LOGO from "@/images/LOGO.svg"
 import { BoxIcon } from "@/components/ui/box-icon"
 import React from "react"
 
-
-//{routes.map(route => (
-//<li key={route.id} className="text-lg font-medium text-[#172b4d] hover:text-[#1868db] cursor-pointer">
-//  <Link key={route.id} href={route.path}>
-//    {route.name}
-// </Link>
-//</li>
-//))}
 
 
 import { AppSidebar } from "@/components/app-sidebar"
