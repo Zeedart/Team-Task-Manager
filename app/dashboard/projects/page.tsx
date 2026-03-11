@@ -1,5 +1,6 @@
 import ProjectCard from "@/components/projectCard"
 import {projectRoutes} from "@/app/dashboard/data/projects"
+import Link from "next/link"
 export default function Projects() {
 
 
@@ -9,7 +10,9 @@ export default function Projects() {
                     <h2 className="text-lg mt-2 ml-6 font-semibold text-gray-500">List of projects</h2>
                     <div className="mt-6 ml-6 grid gap-4  md:grid-cols-2 lg:grid-cols-4">
                         {projectRoutes.map(project => (
-                            <ProjectCard project={project}/>
+                            <Link href={project.url}>
+                                <ProjectCard project={project}/>
+                            </Link>
                         ))}
                     </div>
                     <div className="mt-10 w-full flex">
