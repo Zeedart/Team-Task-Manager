@@ -1,13 +1,46 @@
+"use client"
 import { DataCard } from "@/components/data-card";
-import { projectRoutes } from "./data/projects";
+//import { projectRoutes } from "./data/projects";
 import RecentActivityComp from "@/components/recentActivityComp";
 import { recentActivity } from "./data/recentActivity";
-import { tasks } from "./data/tasks";
+//import { tasks } from "./data/tasks";
 import MyTasks from "@/components/myTasks";
+import client from "@/api/client"
+import { useState, useEffect } from "react";
 
 export default function MainDashboard() {
-    const totalProjects = projectRoutes.length;
-    console.log("Recent Activity:", recentActivity);
+    const [projects, setProjects] = useState([])
+    const [tasks, setTasks] = useState([])
+    const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchData() {
+            const [projectsRes, tasksRes, usersRes] = await Promise.all([
+                client.from("projects").select("*"),
+                client.from("tasks").select("*"),
+                client.from("users").select("*")
+            ])
+
+            if (projectsRes.error || tasksRes.error || usersRes) {
+                console.error(
+                    "Error fetching:",
+                    projectsRes.error || tasksRes.error || usersRes
+                )
+            } else {
+                setProjects(projectsRes.data)
+                setTasks(tasksRes.data)
+                setUsers(usersRes.data)
+            }
+
+            setLoading(false)
+        }
+
+        fetchData()
+    }, [])
+
+    
+    const totalProjects = projects.length;
 
     const currentuser = 1
 
@@ -22,7 +55,6 @@ export default function MainDashboard() {
     const curUserTasks = tasks.filter(
         task => task.assignedTo == currentuser && task.status == "In Progress"
     )
-
 
 
     return (

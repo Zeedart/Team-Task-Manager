@@ -18,7 +18,7 @@ import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
 import { projectRoutes  } from "../app/dashboard/data/projects.js"
-import LOGO from "@/images/LOGO.svg"
+import LOGO from "@/app/images/LOGO.svg"
 import Image from 'next/image';
 
 // This is sample data.

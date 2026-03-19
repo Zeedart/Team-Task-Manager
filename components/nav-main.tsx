@@ -43,28 +43,33 @@ export function NavMain({
             className="group/collapsible"
             render={<SidebarMenuItem />}
           >
-            <SidebarMenuButton tooltip={item.title}>
-              {item.icon}
+            <div className="flex items-center w-full">
 
-              <Link href={item.url} className="flex-1 text-left">
-                {item.title}
-              </Link>
+              {/* MAIN BUTTON */}
+              <SidebarMenuButton tooltip={item.title}>
+                {item.icon}
 
-              <CollapsibleTrigger >
-                <button className="ml-auto">
-                  <ChevronRightIcon className="transition-transform duration-200 group-data-open/collapsible:rotate-90" />
-                </button>
+                <Link href={item.url} className="flex-1 text-left">
+                  {item.title}
+                </Link>
+              </SidebarMenuButton>
+
+              {/* SEPARATE TRIGGER */}
+              <CollapsibleTrigger className="ml-auto">
+                <ChevronRightIcon className="transition-transform duration-200 group-data-open/collapsible:rotate-90" />
               </CollapsibleTrigger>
-            </SidebarMenuButton>
+
+            </div>
 
             <CollapsibleContent>
               <SidebarMenuSub>
                 {item.items?.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton >
-                      <Link key={subItem.id} href={subItem.url}>
+                    <SidebarMenuSubButton render={
+                      <Link href={subItem.url}>
                         {subItem.title}
                       </Link>
+                    }>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 ))}

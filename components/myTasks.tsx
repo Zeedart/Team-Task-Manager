@@ -37,7 +37,6 @@ export default function MyTasks({ tasks }: {
                 {tasks
                     .filter(task => task.assignedTo == 1)
                     .map((task) => (
-                        <>
                             <li className="flex items-start space-x-3 flex" key={task.id}>
                                 <p className="text-xl font-medium text-[#172b4d]">{task.title}</p>
                                 <div className="mt-2">
@@ -48,8 +47,6 @@ export default function MyTasks({ tasks }: {
                                     </span>
                                 </div>
                             </li>
-                            <hr />
-                        </>
                     ))
                 }
 

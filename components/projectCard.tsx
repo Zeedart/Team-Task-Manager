@@ -5,8 +5,15 @@ import {
 
 import type { Project } from "@/app/dashboard/data/types"
 import { tasks } from "@/app/dashboard/data/tasks"
+import { format, parseISO } from 'date-fns'
 
 export default function ProjectCard({ project }: Project) {
+
+    const datestr = new Date(project.createdOn)
+    const formatted = datestr
+    ? format(parseISO(project.createdOn), 'dd MMM yyyy')
+    : ''
+
 
     //Formula for Progress %:
     //% = (Completed Task / Total tasks) * 100
@@ -39,7 +46,7 @@ export default function ProjectCard({ project }: Project) {
 hover:shadow-lg hover:-translate-y-1 hover:border-blue-400 bg-white">
             <div>
                 <h1 className="font-semibold text-lg text-[#172b4d]">{project.title}</h1>
-                <h2 className="text-gray-500 text-sm">{project.createdOn}</h2>
+                <h2 className="text-gray-500 text-sm">{formatted}</h2>
             </div>
             <div>
                 <Progress value={progress} className="w-full max-w-sm">

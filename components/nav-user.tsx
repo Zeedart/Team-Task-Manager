@@ -21,6 +21,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import client from "@/api/client"
+import { Button } from "./ui/button"
+import { useRouter } from 'next/navigation';
 
 export function NavUser({
   user,
@@ -32,6 +35,7 @@ export function NavUser({
     img: string
   }
 }) {
+  const router = useRouter()
   const { isMobile } = useSidebar()
   return (
     <SidebarMenu>
@@ -99,10 +103,15 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon
-              />
-              Log out
+            <DropdownMenuItem
+              onClick={async () => {
+                await client.auth.signOut()
+                router.replace("/")
+              }}
+              className="cursor-pointer"
+            >
+              <LogOutIcon />
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

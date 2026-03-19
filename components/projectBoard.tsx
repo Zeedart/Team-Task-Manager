@@ -32,7 +32,7 @@ export default function ProjectBoard({ status, tasks }:
                 <ol className="flex flex-col gap-3">
                     {
                         tasks.map(task => (
-                            <li><TaskCard task={task} users={users} /></li>
+                            <li key={task.id}><TaskCard task={task} users={users} /></li>
                         ))
                     }
                 </ol>
