@@ -12,25 +12,28 @@ export default function MainDashboard() {
     const [projects, setProjects] = useState([])
     const [tasks, setTasks] = useState([])
     const [users, setUsers] = useState([])
+    const [activities, setActivities] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function fetchData() {
-            const [projectsRes, tasksRes, usersRes] = await Promise.all([
+            const [projectsRes, tasksRes, usersRes, activityRes] = await Promise.all([
                 client.from("projects").select("*"),
                 client.from("tasks").select("*"),
-                client.from("users").select("*")
+                client.from("users").select("*"),
+                client.from("activity_logs").select("*")
             ])
 
-            if (projectsRes.error || tasksRes.error || usersRes) {
+            if (projectsRes.error || tasksRes.error || usersRes.error || activityRes.error) {
                 console.error(
                     "Error fetching:",
-                    projectsRes.error || tasksRes.error || usersRes
+                    projectsRes.error || tasksRes.error || usersRes.error || activityRes.error
                 )
             } else {
                 setProjects(projectsRes.data)
                 setTasks(tasksRes.data)
                 setUsers(usersRes.data)
+                setActivities(activityRes.data)
             }
 
             setLoading(false)
@@ -57,6 +60,7 @@ export default function MainDashboard() {
     )
 
 
+
     return (
         <div className="p-6">
             <h1 className="text-3xl font-bold text-[#172b4d]">Dashboard</h1>
@@ -68,8 +72,8 @@ export default function MainDashboard() {
                 <DataCard title="Tasks Completed" value={totalTaskCompleted} />
             </div>
             <div className="mt-10 w-full flex">
-                <RecentActivityComp recentActivity={recentActivity} />
-                <MyTasks tasks={curUserTasks} />
+                <RecentActivityComp users={users} recentActivity={activities} />
+                <MyTasks tasks={tasks} />
             </div>
         </div>
     );

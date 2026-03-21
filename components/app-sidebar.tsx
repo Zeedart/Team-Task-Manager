@@ -17,68 +17,93 @@ import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIco
 import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
-import { projectRoutes  } from "../app/dashboard/data/projects.js"
+import { projectRoutes } from "../app/dashboard/data/projects.js"
 import LOGO from "@/app/images/LOGO.svg"
 import Image from 'next/image';
+import { useEffect, useState } from "react"
+import type { Project } from "@/app/dashboard/data/types.js"
+import client from "@/api/client.js"
+
 
 // This is sample data.
-const data = { 
-  user: {
-    id: 1,
-    username: "John Doe",
-    email: "m@example.com",
-    img: "https://randomuser.me/api/portraits/men/1.jpg",
-  },
-  navMain: [
-    {
-      title: "Projects",
-      url: "/dashboard/projects",
-      icon: (
-        <RocketIcon
-        />
-      ),
-      isActive: true,
-      items: projectRoutes
-    },
-  ],
-  dashboard: [
-    {
-      name: "Home",
-      url: "/dashboard",
-      icon: (
-        <BoxIcon
-        />
-      ),
-    },
-  ],
-  tasks: [
-    {
-      name: "Tasks",
-      url: "/dashboard/tasks",
-      icon: (
-        <LayersIcon
-        />
-      ),
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const { data, error } = await client.from("projects").select("*")
+      
+
+      if (error) {
+        console.log("Failed to Fetch Projects")
+      } else {
+        setProjects(data)
+      }
+
+      setLoading(false)
+    }
+
+    fetchProjects()
+  }, [])
+
+
+    const user = {
+      id: 1,
+      username: "John Doe",
+      email: "m@example.com",
+      img: "https://randomuser.me/api/portraits/men/1.jpg",
+    }
+
+    const navMain = [
+      {
+        title: "Projects",
+        url: "/dashboard/projects",
+        icon: (
+          <RocketIcon
+          />
+        ),
+        isActive: true,
+        items: projects
+      }]
+  
+    const  dashboard = [
+      {
+        name: "Home",
+        url: "/dashboard",
+        icon: (
+          <BoxIcon
+          />
+        ),
+      }]
+
+    const tasks = [
+      {
+        name: "Tasks",
+        url: "/dashboard/tasks",
+        icon: (
+          <LayersIcon
+          />
+        ),
+      }]
+
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div className="ml-5 flex space-x-10 items-center-safe">
-          <Image src={LOGO} alt="logo" width={37} height={35}/>
+          <Image src={LOGO} alt="logo" width={37} height={35} />
           <p className="font-bold text-[30px] text-[#172b4d]">Taskora</p>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects items={data.dashboard} />
-        <NavMain items={data.navMain} />
-        <NavProjects items={data.tasks} />
+        <NavProjects items={dashboard} />
+        <NavMain items={navMain} />
+        <NavProjects items={tasks} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

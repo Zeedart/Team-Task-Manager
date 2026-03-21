@@ -16,7 +16,7 @@ export default function Projects() {
 
     useEffect(() => {
         async function fetchProjects() {
-            const { data, error } = await client.from("Projects").select("*")
+            const { data, error } = await client.from("projects").select("*")
             if (error) {
                 console.error("Error fetching projects:", error)
             } else {
@@ -33,20 +33,23 @@ export default function Projects() {
         console.log("here we are")
     }
 
+    console.log("PROJECTS:", projects)
+    console.log("URLS:", projects.map(p => p.url))
+
     if (!projects || projects.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center text-center px-140 py-50">
                 <div className="text-gray-400 mb-6 text-6xl">
-                        <Image src={NotFoundImg} alt="NotFound" width={100} height={100}/>
+                    <Image src={NotFoundImg} alt="NotFound" width={100} height={100} />
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">No projects yet</h2>
                 <p className="text-gray-500 mb-6">Get started by creating your first project.</p>
-                    <button
-                        onClick={onButtonClick}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    >
-                        + Create Project
-                    </button>
+                <button
+                    onClick={onButtonClick}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                    + Create Project
+                </button>
             </div>
         )
     }
@@ -66,7 +69,10 @@ export default function Projects() {
             <h2 className="text-lg mt-2 ml-6 font-semibold text-gray-500">List of projects</h2>
             <div className="mt-6 ml-6 grid gap-4  md:grid-cols-2 lg:grid-cols-4">
                 {projects.map(project => (
-                    <Link key={project.id} href={project.url}>
+                    <Link
+                        key={project.id}
+                        href={project.url ?? `/dashboard/projects/${project.id}`}
+                    >
                         <ProjectCard project={project} />
                     </Link>
                 ))}
