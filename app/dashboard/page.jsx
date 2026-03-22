@@ -1,19 +1,30 @@
 "use client"
 import { DataCard } from "@/components/data-card";
-//import { projectRoutes } from "./data/projects";
 import RecentActivityComp from "@/components/recentActivityComp";
-import { recentActivity } from "./data/recentActivity";
-//import { tasks } from "./data/tasks";
 import MyTasks from "@/components/myTasks";
 import client from "@/api/client"
 import { useState, useEffect } from "react";
+import {useRouter} from "next/navigation"
+import useAuth from "@/hooks/useAuth.js"
 
 export default function MainDashboard() {
     const [projects, setProjects] = useState([])
     const [tasks, setTasks] = useState([])
     const [users, setUsers] = useState([])
     const [activities, setActivities] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading1, setLoading1] = useState(true)
+
+    const { user, loading } = useAuth();
+    const router = useRouter();
+
+
+    // Auth redirect
+    useEffect(() => {
+        if (!loading && !user) {
+            router.replace("/"); // redirect to login
+        }
+    }, [loading, user, router]);
+
 
     useEffect(() => {
         async function fetchData() {
@@ -36,7 +47,7 @@ export default function MainDashboard() {
                 setActivities(activityRes.data)
             }
 
-            setLoading(false)
+            setLoading1(false)
         }
 
         fetchData()
@@ -45,21 +56,15 @@ export default function MainDashboard() {
     
     const totalProjects = projects.length;
 
-    const currentuser = 1
-
-    const totalUserTasks = tasks.filter(
-        task => task.assignedTo == currentuser && task.status != "Completed"
-    ).length
+    const currentuser = user.id
 
     const totalTaskCompleted = tasks.filter(
         task => task.assignedTo == currentuser && task.status == "Completed"
     ).length
 
     const curUserTasks = tasks.filter(
-        task => task.assignedTo == currentuser && task.status == "In Progress"
-    )
-
-
+        task => task.assignedTo === currentuser && (task.status == "In Progress" || task.status == "In Review")
+    ).length
 
     return (
         <div className="p-6">
@@ -68,7 +73,7 @@ export default function MainDashboard() {
             <div className="mt-6 ml-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <DataCard title="Total Projects" value={totalProjects} />
                 <DataCard title="Total Tasks" value={tasks.length} />
-                <DataCard title="Tasks Assigned to me" value={totalUserTasks} />
+                <DataCard title="Tasks Assigned to me" value={curUserTasks} />
                 <DataCard title="Tasks Completed" value={totalTaskCompleted} />
             </div>
             <div className="mt-10 w-full flex">

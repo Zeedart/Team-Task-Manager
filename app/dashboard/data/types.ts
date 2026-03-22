@@ -1,4 +1,4 @@
-export type Task = {
+export type Tasks = {
   id: number;
   title: string;
   status?: "In Review" | "In Progress" | "Completed";  // restrict to these values

@@ -24,9 +24,6 @@ export default async function ProjectDetails({
     task => task.projectId == project?.id
   )
 
-  console.log(projectTasks)
-  console.log(curUserTasks)
-
   if (!project) {
     console.log(projectID);
     return <div>Project not found</div>;
@@ -44,9 +41,6 @@ export default async function ProjectDetails({
   const completed = projectTasks.filter(
     task => task.status == "Completed"
   )
-
-
-
 
   return (
     <div className="p-6">

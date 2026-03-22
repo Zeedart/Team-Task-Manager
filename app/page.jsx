@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
+
 export default function Page() {
     const { user, loading } = useAuth();
     const router = useRouter()

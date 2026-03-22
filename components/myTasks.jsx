@@ -27,7 +27,6 @@ export default function MyTasks({ tasks }) {
   }
 
   if (loading || !user) return <p>Loading...</p>
-  console.log(user, tasks)
 
   return (
     <div className="p-6 w-[50%]">
