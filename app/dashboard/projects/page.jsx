@@ -3,10 +3,10 @@ import ProjectCard from "@/components/projectCard"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import client from "@/api/client"
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { RocketIcon } from "@/components/ui/rocket-icon"
 import Image from "next/image"
 import NotFoundImg from "../../images/No_Projects_Found.png"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 
@@ -27,6 +27,32 @@ export default function Projects() {
 
         fetchProjects()
     }, [])
+
+    if (loading) return (
+        <div className="p-6">
+            <h1 className="text-3xl font-bold text-[#172b4d]">Projects</h1>
+            <h2 className="text-lg mt-2 ml-6 font-semibold text-gray-500">List of projects</h2>
+            <div className="mt-6 ml-6 grid gap-4  md:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 7 }).map((_, i) => (
+                    <div key={i} className="border flex w-90 gap-4 flex-col rounded-lg p-6 transition-all duration-200">
+
+                        {/* Title + date */}
+                        <div className="space-y-2">
+                            <Skeleton className="h-5 w-3/4 bg-gray-300" />   {/* title */}
+                            <Skeleton className="h-4 w-1/2 bg-gray-300" />   {/* date */}
+                        </div>
+
+                        {/* Progress bar */}
+                        <div className="space-y-2">
+                            <Skeleton className="h-3 w-1/3 bg-gray-300" />              {/* label */}
+                            <Skeleton className="h-4 w-full rounded-full bg-gray-300" /> {/* progress bar */}
+                        </div>
+
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
 
 
     function onButtonClick() {
@@ -53,15 +79,6 @@ export default function Projects() {
             </div>
         )
     }
-
-
-    if (loading) return (
-        <SkeletonTheme baseColor="#212033" highlightColor="#v8v6r3">
-            <Skeleton />
-            <Skeleton className="mt-2 ml-6" />
-            <Skeleton className="mt-6 ml-6" />
-        </SkeletonTheme>
-    )
 
     return (
         <div className="p-6">

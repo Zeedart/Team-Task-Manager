@@ -1,7 +1,7 @@
-import type { Task } from "@/app/dashboard/data/types"
+import type { Tasks } from "@/app/dashboard/data/types"
 import type { Users } from "@/app/dashboard/data/types"
 export default function TaskCard({ task, users }: {
-    task: Task
+    task: Tasks
     users: Users[]
 }) {
 
@@ -52,7 +52,7 @@ export default function TaskCard({ task, users }: {
             <div className="mt-4 flex gap-4">
                 {/* Avatar */}
                 <img
-                    src={user?.img}
+                    src={user?.avatar_url}
                     alt="user"
                     className="h-6 w-6 rounded-full"
                 />

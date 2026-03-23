@@ -1,14 +1,38 @@
+"use client"
 import TaskCard from "@/components/task-card"
 import { Button } from "@/components/ui/button"
-import { users } from "@/app/dashboard/data/users"
-import type { Task } from "@/app/dashboard/data/types"
+import type { Tasks } from "@/app/dashboard/data/types"
+import { useState, useEffect } from "react"
+import client from "@/api/client"
+import type { Users } from "@/app/dashboard/data/types"
 
 export default function ProjectBoard({ status, tasks }:
     {
         status: string
-        tasks: Task[]
+        tasks: Tasks[]
     }
 ) {
+
+    const [users, setUsers] = useState<Users[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchUsers() {
+            const {data, error} = await client.from("users").select("*")
+
+            if (error){
+                return console.log("FAILED TO FETCH USERS:", error)
+            }
+            else {
+                setUsers(data)
+            }
+
+            setLoading(false)
+        }
+
+        fetchUsers()
+
+    }, [])
 
     return (
         <div className="rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col h-full">
