@@ -72,7 +72,7 @@ export default function ProjectDetails() {
         {/* Boards */}
         <div className="mt-18 ml-10 gap-4 flex">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div className="w-85 h-60 rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col">
+            <div key={i} className="w-85 h-60 rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col">
 
               {/* Header */}
               <header className="w-full flex justify-between bg-gray-200 items-center px-3 py-2">
