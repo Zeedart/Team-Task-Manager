@@ -24,7 +24,7 @@ export default function RecentActivityComp({
             </h2>
 
             <ul className="space-y-4">
-                {recentActivity.map((activity) => {
+                {recentActivity.slice(-6).reverse().map((activity) => {
                     const user = users.find(u => u.id === activity.user_id)
 
                     return (
@@ -36,6 +36,7 @@ export default function RecentActivityComp({
                                     alt="User"
                                 />
                             </div>
+
 
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-[#172b4d]">
