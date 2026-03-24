@@ -4,8 +4,9 @@ import RecentActivityComp from "@/components/recentActivityComp";
 import MyTasks from "@/components/myTasks";
 import client from "@/api/client"
 import { useState, useEffect } from "react";
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 import useAuth from "@/hooks/useAuth.js"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function MainDashboard() {
     const [projects, setProjects] = useState([])
@@ -53,7 +54,65 @@ export default function MainDashboard() {
         fetchData()
     }, [])
 
-    
+    if (loading1) {
+        return (
+            <div className="p-6">
+                {/* Title */}
+                <Skeleton className="h-8 w-50 mb-2 bg-gray-200" />
+                <Skeleton className="h-5 w-32 ml-6 mt-5 mb-6 bg-gray-200" />
+
+                {/* Cards */}
+                <div className="mt-6 ml-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="rounded-lg border w-80 p-10">
+                            <Skeleton className="h-6 w-32 mx-auto bg-gray-200 mb-4" />
+                            <Skeleton className="h-10 w-20 bg-gray-200 mx-auto" />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Bottom section */}
+                <div className="mt-10 w-full flex gap-6">
+
+                    {/* Recent Activity Skeleton */}
+                    <div className="p-6 w-[50%]">
+                        <Skeleton className="h-7 w-60 mb-6 bg-gray-200" />
+
+                        <ul className="space-y-4">
+                            {[...Array(6)].map((_, i) => (
+                                <li key={i} className="flex items-start space-x-3">
+                                    <Skeleton className="h-10 bg-gray-200 w-10 rounded-full" />
+
+                                    <div className="flex-1 space-y-2">
+                                        <Skeleton className="h-4 bg-gray-200 w-32" />
+                                        <Skeleton className="h-3 bg-gray-200 w-48" />
+                                        <Skeleton className="h-3 bg-gray-200 w-20" />
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* My Tasks Skeleton */}
+                    <div className="p-6 w-[50%]">
+                        <Skeleton className="h-7 bg-gray-200 w-40 mb-6" />
+
+                        <ul className="space-y-4">
+                            {[...Array(6)].map((_, i) => (
+                                <li key={i} className="flex items-center gap-4">
+                                    <Skeleton className="h-5 bg-gray-200 w-60" />
+                                    <Skeleton className="h-6 bg-gray-200 w-24 rounded-md" />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+
+
     const totalProjects = projects.length;
 
     const currentuser = user.id
