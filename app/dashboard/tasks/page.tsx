@@ -10,6 +10,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import { Skeleton } from "@/components/ui/skeleton"
+
 import { useState, useEffect } from "react"
 import client from "@/api/client"
 import type { Project, Tasks, Users } from "../data/types"
@@ -23,30 +25,75 @@ export default function Tasks() {
 
 
     useEffect(() => {
-            async function fetchData() {
-                const [projectsRes, tasksRes, usersRes] = await Promise.all([
-                    client.from("projects").select("*"),
-                    client.from("tasks").select("*"),
-                    client.from("users").select("*"),
-                ])
-    
-                if (projectsRes.error || tasksRes.error || usersRes.error ) {
-                    console.error(
-                        "Error fetching:",
-                        projectsRes.error || tasksRes.error || usersRes.error 
-                    )
-                } else {
-                    setProjects(projectsRes.data)
-                    setTasks(tasksRes.data)
-                    setUsers(usersRes.data)
-                }
-    
-                setLoading(false)
+        async function fetchData() {
+            const [projectsRes, tasksRes, usersRes] = await Promise.all([
+                client.from("projects").select("*"),
+                client.from("tasks").select("*"),
+                client.from("users").select("*"),
+            ])
+
+            if (projectsRes.error || tasksRes.error || usersRes.error) {
+                console.error(
+                    "Error fetching:",
+                    projectsRes.error || tasksRes.error || usersRes.error
+                )
+            } else {
+                setProjects(projectsRes.data)
+                setTasks(tasksRes.data)
+                setUsers(usersRes.data)
             }
-    
-            fetchData()
-        }, [])
-    
+
+            setLoading(false)
+        }
+
+        fetchData()
+    }, [])
+
+    if (loading) {
+        return (
+            <div className="p-6 w-full">
+                {/* Titles */}
+                <Skeleton className="h-8 w-32 bg-gray-200 mb-2" />
+                <Skeleton className="h-5 w-40 bg-gray-200 ml-6 mb-6" />
+
+                <div className="w-full mt-6 ml-6">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">task</TableHead>
+                                <TableHead className="w-[200px]">Status</TableHead>
+                                <TableHead className="w-[200px]">Project</TableHead>
+                                <TableHead>Assigned to</TableHead>
+                            </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            {[...Array(6)].map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>
+                                        <Skeleton className="h-5 bg-gray-200 w-50" />
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <Skeleton className="h-6 w-24 bg-gray-200 rounded" />
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <Skeleton className="h-4 bg-gray-200 w-28" />
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <Skeleton className="h-4 bg-gray-200 w-24" />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
+        )
+    }
+
 
     const statusStyles = {
         "To do": {
