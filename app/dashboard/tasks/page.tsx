@@ -1,3 +1,4 @@
+"use client"
 import {
     Table,
     TableBody,
@@ -9,11 +10,44 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { tasks } from "@/app/dashboard/data/tasks"
-import { projectRoutes } from "@/app/dashboard/data/projects"
-import { users } from "@/app/dashboard/data/users"
+import { useState, useEffect } from "react"
+import client from "@/api/client"
+import type { Project, Tasks, Users } from "../data/types"
 
 export default function Tasks() {
+
+    const [projects, setProjects] = useState<Project[]>([])
+    const [tasks, setTasks] = useState<Tasks[]>([])
+    const [users, setUsers] = useState<Users[]>([])
+    const [loading, setLoading] = useState(true)
+
+
+    useEffect(() => {
+            async function fetchData() {
+                const [projectsRes, tasksRes, usersRes] = await Promise.all([
+                    client.from("projects").select("*"),
+                    client.from("tasks").select("*"),
+                    client.from("users").select("*"),
+                ])
+    
+                if (projectsRes.error || tasksRes.error || usersRes.error ) {
+                    console.error(
+                        "Error fetching:",
+                        projectsRes.error || tasksRes.error || usersRes.error 
+                    )
+                } else {
+                    setProjects(projectsRes.data)
+                    setTasks(tasksRes.data)
+                    setUsers(usersRes.data)
+                }
+    
+                setLoading(false)
+            }
+    
+            fetchData()
+        }, [])
+    
+
     const statusStyles = {
         "To do": {
             bg: "bg-blue-100",
@@ -61,7 +95,7 @@ export default function Tasks() {
                                     {task.status}
                                 </span></TableCell>
                                 <TableCell>
-                                    {projectRoutes.find(project => task.projectId === project.id)?.title}
+                                    {projects.find(project => task.projectId === project.id)?.title}
                                 </TableCell>
                                 <TableCell>{users.find(user => task.assignedTo === user.id)?.username}</TableCell>
                             </TableRow>
