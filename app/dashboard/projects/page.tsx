@@ -7,11 +7,12 @@ import { RocketIcon } from "@/components/ui/rocket-icon"
 import Image from "next/image"
 import NotFoundImg from "../../images/No_Projects_Found.png"
 import { Skeleton } from "@/components/ui/skeleton"
+import type { Project } from "../data/types"
 
 
 
 export default function Projects() {
-    const [projects, setProjects] = useState([])
+    const [projects, setProjects] = useState<Project[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -79,7 +80,6 @@ export default function Projects() {
             </div>
         )
     }
-
     return (
         <div className="p-6">
             <h1 className="text-3xl font-bold text-[#172b4d]">Projects</h1>
