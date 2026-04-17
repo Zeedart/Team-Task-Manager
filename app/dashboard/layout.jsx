@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import React, { useState, useEffect, useMemo } from "react"
+import { toast } from "sonner"
 import { useRouter, usePathname } from "next/navigation"
 import useAuth from "@/hooks/useAuth.js"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -108,6 +109,7 @@ export default function MainLayout({ children }) {
       // 🔥 BEST FIX (no reload)
       setProjects(prev => [...prev, data[0]])
       setTitle("")
+      toast.success("Project created successfully!")
     }
 
     setInputLoading(false)
