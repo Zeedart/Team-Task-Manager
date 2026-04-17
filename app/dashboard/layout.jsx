@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import React, { useState, useEffect, useMemo } from "react"
-import { toast } from "sonner"
+import {toast} from "sonner"
 import { useRouter, usePathname } from "next/navigation"
 import useAuth from "@/hooks/useAuth.js"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -28,6 +28,7 @@ export default function MainLayout({ children }) {
   const pathname = usePathname()
 
   const [projects, setProjects] = useState([])
+  const [ users, setUsers ] = useState([])
   const [title, setTitle] = useState("")
   const [inputLoading, setInputLoading] = useState(false)
 
@@ -58,6 +59,32 @@ export default function MainLayout({ children }) {
 
     fetchProjects() // 🔥 FIX: actually call it
   }, [])
+
+
+    // ----------------------------
+  // FETCH USERS
+  // ----------------------------
+  useEffect(() => {
+    async function fetchUsers() {
+      const { data, error } = await client
+        .from("users")
+        .select("*")
+
+      if (error) {
+        console.log("Failed to fetch users:", error)
+      } else {
+        setUsers(data || [])
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+
+  const currentUser = useMemo(() => {
+    return users.find(u => u.id === user.id)
+  }, [users, user])
+
 
   // ----------------------------
   // FAST LOOKUP MAP (FIXED)
@@ -189,7 +216,7 @@ export default function MainLayout({ children }) {
 
           <SettingsIcon size={30} />
           <img
-            src="https://randomuser.me/api/portraits/men/1.jpg"
+            src={currentUser?.avatar_url}
             className="w-10 h-10 rounded-full"
             alt="profile"
           />
