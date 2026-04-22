@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function ProjectDetails() {
   const { projectID } = useParams<{ projectID: string }>()
+  console.log("Project ID:", projectID) // Debugging log
 
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Tasks[]>([])
@@ -160,10 +161,10 @@ export default function ProjectDetails() {
       </header>
 
       <div className="mt-6 w-full ml-6 grid gap-4 h-60 md:grid-cols-2 lg:grid-cols-5">
-        <ProjectBoard status="To do" tasks={curUserTasks} />
-        <ProjectBoard status="In Progress" tasks={inProgress} />
-        <ProjectBoard status="In Review" tasks={inReview} />
-        <ProjectBoard status="Completed" tasks={completed} />
+        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} />
+        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID}/>
+        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID}/>
+        <ProjectBoard status="Completed" tasks={completed} projectID={projectID}/>
       </div>
     </div>
   )
