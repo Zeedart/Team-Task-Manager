@@ -26,11 +26,12 @@ import {
 
 import { toast } from "sonner"
 
-export default function ProjectBoard({ status, tasks, projectID, onDeleteTask }:
+export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, onDeleteTask }:
     {
         status: string,
         tasks: Tasks[],
         projectID: string,
+        onTaskCreated?: () => Promise<void>;
         onDeleteTask?: (taskId: number) => Promise<void>;
     }
 ) {
@@ -76,34 +77,30 @@ export default function ProjectBoard({ status, tasks, projectID, onDeleteTask }:
     }, [])
 
     async function handleNewTask() {
-        setInputLoading(true)
-
-        if (!validateForm()) {
-            return console.error(errors)// stop execution
-        }
-
-        const { data, error } = await client
-            .from("tasks")
-            .insert([
-                {
-                    title,
-                    status: status,
-                    projectId: projectid,
-                    assignedTo: selectedUserId
-                },
-            ])
-            .select()
-
-        if (error) {
-            console.error("Error Adding Task:", error)
-        } else {
-            // 🔥 BEST FIX (no reload)
-            setTitle("")
-            toast.success("Task Added successfully!")
-        }
-
-        setInputLoading(false)
+    setInputLoading(true);
+    if (!validateForm()) {
+      setInputLoading(false);
+      return;
     }
+
+    const { data, error } = await client.from("tasks").insert([ { title, status: status, projectId: projectid, assignedTo: selectedUserId }, ]).select();
+
+    if (error) {
+      console.error("Error Adding Task:", error);
+      toast.error("Failed to add task");
+    } else {
+      setTitle("");
+      setSelectedUserId(null);
+      toast.success("Task Added successfully!");
+
+      // 🔥 Refresh tasks so the new card appears
+      if (onTaskCreated) {
+        await onTaskCreated();
+      }
+    }
+    setInputLoading(false);
+  }
+
 
     return (
         <div className="rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col h-full">

@@ -76,6 +76,18 @@ export default function ProjectDetails() {
     fetchData()
   }, [])
 
+
+  const handleAddTask = async () => {
+  const { data, error } = await client
+    .from("tasks")
+    .select("*")
+    .eq("projectId", Number(projectID));   // or fetch all if you prefer
+
+  if (!error) {
+    setTasks(data ?? []);
+  }
+};
+
   // Loading state
   if (loading) {
     return (
@@ -180,10 +192,10 @@ export default function ProjectDetails() {
       </header>
 
       <div className="mt-6 w-full ml-6 grid gap-4 h-60 md:grid-cols-2 lg:grid-cols-5">
-        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
       </div>
     </div>
   )

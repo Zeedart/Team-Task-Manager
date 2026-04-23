@@ -52,12 +52,16 @@ export default function TaskCard({ task, users, onDelete }: {
         },
     };
 
+
+
     return (
         <div
-            className={`rounded-lg border w-64 bg-white p-4 shadow-sm transition-all duration-500 ease-out overflow-hidden ${isLeaving
-                    ? "opacity-0 scale-95 max-h-0 p-0 mb-0 border-0"  // collapse
-                    : "opacity-100 scale-100 max-h-96"                 // expand
-                }`}
+            className={`rounded-lg border bg-white p-4 shadow-sm
+    transition-all duration-300
+    animate-fade-in-up
+    w-64
+    ${isLeaving ? "opacity-0 scale-95 max-h-0 p-0 mb-0 border-0" : "opacity-100 scale-100 max-h-96"}
+  `}
         >
             {/* Title */}
             <div className="flex justify-between">
