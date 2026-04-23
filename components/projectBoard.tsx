@@ -26,11 +26,12 @@ import {
 
 import { toast } from "sonner"
 
-export default function ProjectBoard({ status, tasks, projectID }:
+export default function ProjectBoard({ status, tasks, projectID, onDeleteTask }:
     {
-        status: string
-        tasks: Tasks[]
-        projectID: string
+        status: string,
+        tasks: Tasks[],
+        projectID: string,
+        onDeleteTask?: (taskId: number) => Promise<void>;
     }
 ) {
 
@@ -160,7 +161,8 @@ export default function ProjectBoard({ status, tasks, projectID }:
                                             ) : (
                                                 // Placeholder when nothing is selected
                                                 <span className="text-muted-foreground">Select a user</span>
-                                            )}
+                                          
+                                          )}
                                         </SelectTrigger>
                                         <SelectContent>
                                             {users.map((user) => (
@@ -198,11 +200,11 @@ export default function ProjectBoard({ status, tasks, projectID }:
             
 
             {/* Scroll Area */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 pb-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
-                <ol className="flex flex-col gap-3">
+            <div className="flex-1 w-full overflow-y-auto overflow-x-hidden px-4 pb-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+                <ol className="flex flex-col pr-4 gap-3">
                     {
                         tasks.map(task => (
-                            <li key={task.id}><TaskCard task={task} users={users} /></li>
+                            <li key={task.id}><TaskCard task={task} users={users} onDelete={onDeleteTask} /></li>
                         ))
                     }
                 </ol>

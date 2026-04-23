@@ -8,15 +8,34 @@ import type { User } from "@supabase/supabase-js"
 import { useParams } from "next/navigation"
 import { format, parseISO } from 'date-fns'
 import { Skeleton } from "@/components/ui/skeleton"
+import { toast } from "sonner"
 
 export default function ProjectDetails() {
   const { projectID } = useParams<{ projectID: string }>()
-  console.log("Project ID:", projectID) // Debugging log
 
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Tasks[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+
+
+
+  const handleDeleteTask = async (taskId: number) => {
+    const { error } = await client
+      .from("tasks")
+      .delete()
+      .eq("id", taskId);
+
+    if (error) {
+      toast.error("Failed to delete task");
+      throw error; // Let the child know it failed
+    }
+
+    // Remove from state (animation has already finished in the child)
+    setTasks(prev => prev.filter(task => task.id !== taskId));
+    toast.success("Task deleted");
+  };
+
 
   // Get logged-in user
   useEffect(() => {
@@ -161,10 +180,10 @@ export default function ProjectDetails() {
       </header>
 
       <div className="mt-6 w-full ml-6 grid gap-4 h-60 md:grid-cols-2 lg:grid-cols-5">
-        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} />
-        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID}/>
-        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID}/>
-        <ProjectBoard status="Completed" tasks={completed} projectID={projectID}/>
+        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onDeleteTask={handleDeleteTask} />
       </div>
     </div>
   )
