@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { SettingsIcon } from "@/components/ui/settings-icon"
 import client from "@/api/client.js"
+import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
 
 export default function MainLayout({ children }) {
   const { user, loading } = useAuth()
@@ -208,7 +209,7 @@ export default function MainLayout({ children }) {
                   className="w-full bg-blue-600 hover:bg-blue-700"
                   disabled={inputLoading}
                 >
-                  {inputLoading ? "Creating..." : "+ Create Project"}
+                  {inputLoading ? <LoaderCircleIcon className="w-5 h-5 animate-spin" /> : "+ Create Project"}
                 </Button>
               </div>
             </PopoverContent>
