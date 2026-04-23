@@ -1,6 +1,7 @@
 import type { Tasks } from "@/app/dashboard/data/types"
 import type { Users } from "@/app/dashboard/data/types"
 import { useState } from "react"
+import {Trash2Icon} from "@/components/ui/trash-2-icon"
 export default function TaskCard({ task, users, onDelete }: {
     task: Tasks
     users: Users[]
@@ -70,7 +71,9 @@ export default function TaskCard({ task, users, onDelete }: {
                 </p>
                 <button onClick={handleDelete}
                     disabled={isLeaving}
-                    className="mr-2 text-gray-500 hover:text-red-500 disabled:opacity-50">X</button>
+                    className="mr-2 text-gray-500 hover:text-red-500 disabled:opacity-50">
+                        <Trash2Icon className="w-6 h-6"/>
+                </button>
             </div>
 
             {/* Status tag */}
