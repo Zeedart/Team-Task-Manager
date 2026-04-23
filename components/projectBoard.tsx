@@ -9,6 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Ghost } from "lucide-react"
+import {LoaderCircleIcon} from "@/components/ui/loader-circle-icon"
 import {
     Field,
     FieldDescription,
@@ -185,7 +186,7 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
                                     disabled={inputLoading || !isFormValid}
                                     onClick={handleNewTask}
                                 >
-                                    {inputLoading ? "Creating..." : "+ Add Task"}
+                                    {inputLoading ? <LoaderCircleIcon className="w-5 h-5 animate-spin" /> : "+ Add Task"}
                                 </Button>
                             </form>
 
