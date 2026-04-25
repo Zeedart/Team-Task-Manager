@@ -22,32 +22,22 @@ import Image from 'next/image';
 import { useEffect, useState } from "react"
 import type { Project, Users } from "@/app/dashboard/data/types.js"
 import client from "@/api/client.js"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 // This is sample data.
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [projects, setProjects] = useState<Project[]>([])
+export function AppSidebar({
+  projects: externalProjects,          // 👈 new prop
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  projects?: Project[];                // 👈 typed as optional
+}) {
+
   const [users, setUsers] = useState<Users[]>([])
   const [userLoading, setUserLoading] = useState(true)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchProjects() {
-      const { data, error } = await client.from("projects").select("*")
 
 
-      if (error) {
-        console.log("Failed to Fetch Projects")
-      } else {
-        setProjects(data)
-      }
-
-      setLoading(false)
-    }
-
-    fetchProjects()
-  }, [])
 
   useEffect(() => {
     async function fetchUsers() {
@@ -83,13 +73,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [users]) // Re-run when users array loads
 
 
-  const user = {
-    id: 1,
-    username: "John Doe",
-    email: "m@example.com",
-    img: currentUserData?.avatar_url,
-  }
-
   const navMain = [
     {
       title: "Projects",
@@ -99,7 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       ),
       isActive: true,
-      items: projects
+      items: externalProjects ?? []
     }]
 
   const dashboard = [
@@ -137,7 +120,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects items={tasks} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        {currentUserData ? (
+          <NavUser user={currentUserData} />
+        ) : (
+          // optional: loading skeleton
+          <div className="p-4 flex items-center space-x-4">
+            <div className="h-10 w-10 rounded-full bg-gray-300">
+              <Skeleton className="h-full w-full rounded-full bg-gray-200" />
+            </div>
+            <div className="grid space-y-2 flex-1 leading-tight">
+              <Skeleton className="h-4 w-[100px] bg-gray-200" />
+              <Skeleton className="h-4 w-[80px] bg-gray-200" />
+            </div>
+          </div>
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

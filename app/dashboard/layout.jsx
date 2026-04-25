@@ -22,6 +22,7 @@ import {
 import { SettingsIcon } from "@/components/ui/settings-icon"
 import client from "@/api/client.js"
 import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
+import Projects from "./projects/page"
 
 export default function MainLayout({ children }) {
   const { user, loading } = useAuth()
@@ -121,6 +122,12 @@ export default function MainLayout({ children }) {
   async function handleCreateProject() {
     setInputLoading(true)
 
+    if (!title.trim()) {
+      toast.error("Project name cannot be empty.")
+      setInputLoading(false)
+      return
+    }
+
     const { data, error } = await client
       .from("projects")
       .insert([
@@ -132,11 +139,12 @@ export default function MainLayout({ children }) {
       .select()
 
     if (error) {
-      console.error("Error creating project:", error)
+      toast.error("Error creating project:", error)
     } else {
       // 🔥 BEST FIX (no reload)
       setProjects(prev => [...prev, data[0]])
       setTitle("")
+      console.log(Projects)
       toast.success("Project created successfully!")
     }
 
@@ -207,7 +215,7 @@ export default function MainLayout({ children }) {
                 <Button
                   onClick={handleCreateProject}
                   className="w-full bg-blue-600 hover:bg-blue-700"
-                  disabled={inputLoading}
+                  disabled={inputLoading || !title.trim()}
                 >
                   {inputLoading ? <LoaderCircleIcon className="w-5 h-5 animate-spin" /> : "+ Create Project"}
                 </Button>
@@ -216,18 +224,18 @@ export default function MainLayout({ children }) {
           </Popover>
 
           <SettingsIcon size={30} />
-          <img
-            src={currentUser?.avatar_url}
-            className="w-10 h-10 rounded-full"
-            alt="profile"
-          />
+          {currentUser ? <img
+                src={currentUser?.avatar_url}
+                className="w-10 h-10 rounded-full"
+                alt="profile"
+              /> : <LoaderCircleIcon className="w-10 h-10 animate-spin"/>}
         </div>
       </header>
 
       {/* BODY */}
       <div className="flex h-full w-full">
         <SidebarProvider>
-          <AppSidebar />
+          <AppSidebar projects={projects} />
         </SidebarProvider>
 
         <main>{children}</main>

@@ -28,8 +28,10 @@ export function NavMain({
     isActive?: boolean
     items?: {
       id: number
+      user_id: number
       title: string
       url: string
+      createdOn: string
     }[]
   }[]
 }) {
@@ -66,7 +68,7 @@ export function NavMain({
                 {item.items?.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
                     <SidebarMenuSubButton render={
-                      <Link href={subItem.url}>
+                      <Link href={subItem.url} className="animate-fade-in-up">
                         {subItem.title}
                       </Link>
                     }>
