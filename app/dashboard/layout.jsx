@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import React, { useState, useEffect, useMemo } from "react"
-import {toast} from "sonner"
+import { toast } from "sonner"
 import { useRouter, usePathname } from "next/navigation"
 import useAuth from "@/hooks/useAuth.js"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -23,6 +23,7 @@ import { SettingsIcon } from "@/components/ui/settings-icon"
 import client from "@/api/client.js"
 import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
 import Projects from "./projects/page"
+import AvatarUpload from "@/components/pfp/avatarUpload.tsx"
 
 export default function MainLayout({ children }) {
   const { user, loading } = useAuth()
@@ -30,7 +31,7 @@ export default function MainLayout({ children }) {
   const pathname = usePathname()
 
   const [projects, setProjects] = useState([])
-  const [ users, setUsers ] = useState([])
+  const [users, setUsers] = useState([])
   const [title, setTitle] = useState("")
   const [inputLoading, setInputLoading] = useState(false)
 
@@ -63,7 +64,7 @@ export default function MainLayout({ children }) {
   }, [])
 
 
-    // ----------------------------
+  // ----------------------------
   // FETCH USERS
   // ----------------------------
   useEffect(() => {
@@ -155,7 +156,7 @@ export default function MainLayout({ children }) {
     <div>
       {/* HEADER */}
       <header className="h-15 ml-76.5 w-[83%] border-b border-gray-300 flex justify-between items-center">
-        
+
         {/* BREADCRUMBS */}
         <div className="ml-5">
           <Breadcrumb>
@@ -224,11 +225,26 @@ export default function MainLayout({ children }) {
           </Popover>
 
           <SettingsIcon size={30} />
-          {currentUser ? <img
-                src={currentUser?.avatar_url}
-                className="w-10 h-10 rounded-full"
-                alt="profile"
-              /> : <LoaderCircleIcon className="w-10 h-10 animate-spin"/>}
+          {currentUser
+            ?
+            <div className="flex p-5 gap-4 items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <img
+                    src={currentUser?.avatar_url}
+                    className="w-10 h-10 rounded-full"
+                    alt="profile"
+                  />
+                </PopoverTrigger>
+
+                <PopoverContent className="w-80">
+                  <AvatarUpload userId={currentUser.id} currentUrl={currentUser.avatar_url} />
+                </PopoverContent>
+              </Popover>
+            </div>
+              :
+              <LoaderCircleIcon className="w-10 h-10 animate-spin" />
+          }
         </div>
       </header>
 

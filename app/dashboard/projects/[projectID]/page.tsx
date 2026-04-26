@@ -197,6 +197,7 @@ export default function ProjectDetails() {
         <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
         <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
       </div>
+
     </div>
   )
 }
