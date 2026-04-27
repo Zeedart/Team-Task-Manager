@@ -1,7 +1,14 @@
 import type { Tasks } from "@/app/dashboard/data/types"
 import type { Users } from "@/app/dashboard/data/types"
 import { useState } from "react"
-import {Trash2Icon} from "@/components/ui/trash-2-icon"
+import { Trash2Icon } from "@/components/ui/trash-2-icon"
+import { EllipsisIcon } from "@/components/ui/ellipsis-icon"
+import { TrendingUpDownIcon } from "@/components/ui/trending-up-down-icon"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select"
+
 export default function TaskCard({ task, users, onDelete }: {
     task: Tasks
     users: Users[]
@@ -60,24 +67,66 @@ export default function TaskCard({ task, users, onDelete }: {
             className={`rounded-lg border bg-white p-4 shadow-sm
     transition-all duration-300
     animate-fade-in-up
-    w-64
+    w-70
     ${isLeaving ? "opacity-0 scale-95 max-h-0 p-0 mb-0 border-0" : "opacity-100 scale-100 max-h-96"}
   `}
         >
             {/* Title */}
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
                 <p className="text-sm font-medium text-gray-700 leading-snug">
                     {task.title}
                 </p>
-                <button onClick={handleDelete}
-                    disabled={isLeaving}
-                    className="mr-2 text-gray-500 hover:text-red-500 disabled:opacity-50">
-                        <Trash2Icon className="w-6 h-6"/>
-                </button>
+                <Popover>
+                    <PopoverTrigger className="m-0 p-0">
+                        <Button variant="ghost" className="hover:text-blue-500">
+                            <EllipsisIcon />
+                        </Button>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="rounded-md p-2 w-70" align="start">
+                        <ul>
+                            <li className="px-1 py-2 cursor-pointer">
+                                <button onClick={handleDelete}
+                                    disabled={isLeaving}
+                                    className="mr-2 hover:text-red-500 disabled:opacity-50 flex items-center">
+                                    <Trash2Icon className="w-6 h-6" /><span className="ml-3 mt-1">Delete</span>
+                                </button>
+                            </li>
+                            <li>
+                                <Accordion
+                                    collapsible
+                                    className="max-w-lg border border-0"
+                                >
+                                    <AccordionItem value="changeStatus">
+                                        <AccordionTrigger className="w-full px-1 py-2 hover:text-blue-500 flex items-center ">
+                                            <TrendingUpDownIcon className="w-6 h-6 "/><span className="ml-1 mt-1">Change Status</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <Select>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select a status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Status</SelectLabel>
+                                                        <SelectItem value="In Review">In Review</SelectItem>
+                                                        <SelectItem value="In Progress">In Progress</SelectItem>
+                                                        <SelectItem value="Completed">Completed</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
+                            </li>
+                        </ul>
+                    </PopoverContent>
+                </Popover>
+
             </div>
 
             {/* Status tag */}
-            <div className="mt-2">
+            <div className="mt-1">
                 <span className={`rounded px-3 py-2 text-[12px] font-semibold 
                     ${statusStyles[task.status].bg
                     } ${statusStyles[task.status].text} ${statusStyles[task.status].border}`}>
