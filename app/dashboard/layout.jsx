@@ -45,6 +45,24 @@ export default function MainLayout({ children }) {
   }, [loading, user, router])
 
   // ----------------------------
+  // HANDLE DELETE PROJECT
+  // ----------------------------
+
+    async function handleDeleteProject(projectId) {
+       const { error } = await client
+         .from("projects")
+         .delete()
+         .eq("id", projectId)
+
+         if (error) {
+           toast.error("Failed to delete project:", error)
+         } else {
+           setProjects(prev => prev.filter(p => p.id !== projectId))
+           toast.success("Project deleted successfully!")
+         }
+    }
+
+  // ----------------------------
   // FETCH PROJECTS (FIXED)
   // ----------------------------
   useEffect(() => {
@@ -251,7 +269,7 @@ export default function MainLayout({ children }) {
       {/* BODY */}
       <div className="flex h-full w-full">
         <SidebarProvider>
-          <AppSidebar projects={projects} />
+          <AppSidebar projects={projects} onDeleteProject={handleDeleteProject} />
         </SidebarProvider>
 
         <main>{children}</main>

@@ -28,10 +28,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 // This is sample data.
 
 export function AppSidebar({
-  projects: externalProjects,          // 👈 new prop
+  projects: externalProjects,     
+  onDeleteProject,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  projects?: Project[];                // 👈 typed as optional
+  projects?: Project[];               
+  onDeleteProject: (projectId: string) => Promise<void>;
 }) {
 
   const [users, setUsers] = useState<Users[]>([])
@@ -116,7 +118,7 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavProjects items={dashboard} />
-        <NavMain items={navMain} />
+        <NavMain items={navMain} onDeleteProject={onDeleteProject} />
         <NavProjects items={tasks} />
       </SidebarContent>
       <SidebarFooter>
