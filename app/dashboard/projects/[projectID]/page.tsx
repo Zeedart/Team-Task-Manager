@@ -19,6 +19,25 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(true)
 
 
+  const handleUpdateTask = async (taskId: number, newStatus: Tasks['status']) => {
+
+    const typedStatus = newStatus as Tasks['status'];
+
+    const { error } = await client
+      .from("tasks")
+      .update({ status: typedStatus })
+      .eq("id", taskId);
+
+      if (error) { 
+        toast.error("Failed to update task status");
+        throw error; // Let the child know it failed
+      }
+
+      setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
+      toast.success("Task status updated");
+  }
+
+
 
   const handleDeleteTask = async (taskId: number) => {
     const { error } = await client
@@ -192,10 +211,10 @@ export default function ProjectDetails() {
       </header>
 
       <div className="mt-6 w-full ml-6 grid gap-70 h-60 md:grid-cols-2 lg:grid-cols-5">
-        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
-        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} />
+        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
       </div>
 
     </div>

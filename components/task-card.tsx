@@ -8,14 +8,33 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 
-export default function TaskCard({ task, users, onDelete }: {
+export default function TaskCard({ task, users, onDelete, onUpdate }: {
     task: Tasks
     users: Users[]
     onDelete?: (taskId: number) => Promise<void>
+    onUpdate?: (taskId: number, newStatus: Tasks["status"]) => Promise<void>
 }) {
 
     const [isLeaving, setIsLeaving] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [currentStatus, setCurrentStatus] = useState(task.status);
+
+    const handleStatusChange = async () => {
+        if (!onUpdate) return;
+        setIsUpdating(true);
+
+
+        try {
+            await onUpdate(task.id, currentStatus);
+        } catch (error) {
+            console.error("Error updating task status:", error);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
 
     const handleDelete = async () => {
         if (!onDelete) return;
@@ -99,22 +118,31 @@ export default function TaskCard({ task, users, onDelete }: {
                                 >
                                     <AccordionItem value="changeStatus">
                                         <AccordionTrigger className="w-full px-1 py-2 hover:text-blue-500 flex items-center ">
-                                            <TrendingUpDownIcon className="w-6 h-6 "/><span className="ml-1 mt-1">Change Status</span>
+                                            <TrendingUpDownIcon className="w-6 h-6 " /><span className="ml-1 mt-1">Change Status</span>
                                         </AccordionTrigger>
                                         <AccordionContent>
-                                            <Select>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select a status" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Status</SelectLabel>
-                                                        <SelectItem value="In Review">In Review</SelectItem>
-                                                        <SelectItem value="In Progress">In Progress</SelectItem>
-                                                        <SelectItem value="Completed">Completed</SelectItem>
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                            <form>
+                                                <Field>
+                                                    <Select value={currentStatus} onValueChange={(newStatus) => {
+                                                        const typed = newStatus as Tasks["status"];
+                                                        setCurrentStatus(typed);
+                                                        onUpdate?.(task.id, typed);          // immediate sync
+                                                    }}
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select a status" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                <SelectLabel>Status</SelectLabel>
+                                                                <SelectItem value="In Review">In Review</SelectItem>
+                                                                <SelectItem value="In Progress">In Progress</SelectItem>
+                                                                <SelectItem value="Completed">Completed</SelectItem>
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </Field>
+                                            </form>
                                         </AccordionContent>
                                     </AccordionItem>
                                 </Accordion>

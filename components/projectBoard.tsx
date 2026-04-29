@@ -27,13 +27,14 @@ import {
 
 import { toast } from "sonner"
 
-export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, onDeleteTask }:
+export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, onDeleteTask, onUpdateTask }: 
     {
         status: string,
         tasks: Tasks[],
         projectID: string,
-        onTaskCreated?: () => Promise<void>;
-        onDeleteTask?: (taskId: number) => Promise<void>;
+        onTaskCreated?: () => Promise<void>,
+        onDeleteTask?: (taskId: number) => Promise<void>,
+        onUpdateTask?: (taskId: number, newStatus: Tasks['status']) => Promise<void>
     }
 ) {
 
@@ -202,7 +203,7 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
                 <ol className="flex flex-col pr-4 gap-3">
                     {
                         tasks.map(task => (
-                            <li key={task.id}><TaskCard task={task} users={users} onDelete={onDeleteTask} /></li>
+                            <li key={task.id}><TaskCard task={task} users={users} onDelete={onDeleteTask} onUpdate={onUpdateTask} /></li>
                         ))
                     }
                 </ol>
