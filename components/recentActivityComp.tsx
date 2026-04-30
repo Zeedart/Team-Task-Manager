@@ -16,6 +16,7 @@ export default function RecentActivityComp({
             hour: "2-digit",
             year: "numeric",
             minute: "2-digit",
+            hour12: true,
         })
     }
     return (
