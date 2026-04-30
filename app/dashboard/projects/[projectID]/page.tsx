@@ -9,10 +9,10 @@ import { useParams } from "next/navigation"
 import { format, parseISO } from 'date-fns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
+import handleNewActivity from "@/lib/handleActivityLog"
 
 export default function ProjectDetails() {
   const { projectID } = useParams<{ projectID: string }>()
-
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Tasks[]>([])
   const [user, setUser] = useState<User | null>(null)
@@ -20,6 +20,9 @@ export default function ProjectDetails() {
 
 
   const handleUpdateTask = async (taskId: number, newStatus: Tasks['status']) => {
+    const taskTitle = tasks.find(t => t.id === taskId)?.title || "Unknown Task"
+    const taskProjectId = tasks.find(t => t.id === taskId)?.projectId
+    const projectTitle = projects.find(p => p.id === taskProjectId)?.title || "Unknown Project"
 
     const typedStatus = newStatus as Tasks['status'];
 
@@ -35,6 +38,7 @@ export default function ProjectDetails() {
 
       setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
       toast.success("Task status updated");
+      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> changed the status of task <strong>${taskTitle}</strong> in project <strong>${projectTitle}</strong> to <strong>${typedStatus}</strong>`, user)
   }
 
 
@@ -53,7 +57,9 @@ export default function ProjectDetails() {
     // Remove from state (animation has already finished in the child)
     setTasks(prev => prev.filter(task => task.id !== taskId));
     toast.success("Task deleted");
+      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user)
   };
+
 
 
   // Get logged-in user
@@ -70,6 +76,7 @@ export default function ProjectDetails() {
 
     getUser()
   }, [])
+
 
   // Fetch projects + tasks
   useEffect(() => {
@@ -104,6 +111,7 @@ export default function ProjectDetails() {
 
   if (!error) {
     setTasks(data ?? []);
+    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> added a new task to <strong>${project?.title}</strong>`, user)
   }
 };
 

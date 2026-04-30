@@ -22,8 +22,8 @@ import {
 import { SettingsIcon } from "@/components/ui/settings-icon"
 import client from "@/api/client.js"
 import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
-import Projects from "./projects/page"
 import AvatarUpload from "@/components/pfp/avatarUpload.tsx"
+import handleNewActivity from "@/lib/handleActivityLog.jsx"
 
 export default function MainLayout({ children }) {
   const { user, loading } = useAuth()
@@ -35,6 +35,28 @@ export default function MainLayout({ children }) {
   const [title, setTitle] = useState("")
   const [inputLoading, setInputLoading] = useState(false)
 
+
+    // ----------------------------
+  // FETCH USERS
+  // ----------------------------
+  useEffect(() => {
+    async function fetchUsers() {
+      const { data, error } = await client
+        .from("users")
+        .select("*")
+
+      if (error) {
+        console.log("Failed to fetch users:", error)
+      } else {
+        setUsers(data || [])
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  
+
   // ----------------------------
   // AUTH REDIRECT
   // ----------------------------
@@ -44,11 +66,17 @@ export default function MainLayout({ children }) {
     }
   }, [loading, user, router])
 
+    const currentUser = useMemo(() => {
+    return users.find(u => u.id === user.id)
+  }, [users, user])
+
+
   // ----------------------------
   // HANDLE DELETE PROJECT
   // ----------------------------
 
     async function handleDeleteProject(projectId) {
+      const projectTitle = projects.find(p => p.id === projectId)?.title || "Unknown Project"
        const { error } = await client
          .from("projects")
          .delete()
@@ -59,7 +87,10 @@ export default function MainLayout({ children }) {
          } else {
            setProjects(prev => prev.filter(p => p.id !== projectId))
            toast.success("Project deleted successfully!")
+          await handleNewActivity(`<strong>${projectTitle}</strong> was permanently removed by <strong>${currentUser?.username}</strong>`, currentUser)
          }
+
+
     }
 
   // ----------------------------
@@ -81,30 +112,6 @@ export default function MainLayout({ children }) {
     fetchProjects() // 🔥 FIX: actually call it
   }, [])
 
-
-  // ----------------------------
-  // FETCH USERS
-  // ----------------------------
-  useEffect(() => {
-    async function fetchUsers() {
-      const { data, error } = await client
-        .from("users")
-        .select("*")
-
-      if (error) {
-        console.log("Failed to fetch users:", error)
-      } else {
-        setUsers(data || [])
-      }
-    }
-
-    fetchUsers()
-  }, [])
-
-
-  const currentUser = useMemo(() => {
-    return users.find(u => u.id === user.id)
-  }, [users, user])
 
 
   // ----------------------------
@@ -163,8 +170,8 @@ export default function MainLayout({ children }) {
       // 🔥 BEST FIX (no reload)
       setProjects(prev => [...prev, data[0]])
       setTitle("")
-      console.log(Projects)
       toast.success("Project created successfully!")
+      await handleNewActivity(`<strong>${currentUser.username}</strong> created a new project <strong>${data[0].title}</strong>`, currentUser)
     }
 
     setInputLoading(false)

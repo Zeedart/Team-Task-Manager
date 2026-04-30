@@ -8,6 +8,7 @@ export default function RecentActivityComp({
     users: Users[]
 }) {
 
+
     function formatTime(date: string) {
         return new Date(date).toLocaleString("en-GB", {
             day: "2-digit",
@@ -43,9 +44,7 @@ export default function RecentActivityComp({
                                     {user?.username}
                                 </p>
 
-                                <p className="text-sm text-gray-500">
-                                    {activity.description}
-                                </p>
+                                <p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: activity.description }} />
 
                                 <p className="text-xs text-gray-400">
                                     {formatTime(activity.createdOn)}

@@ -33,7 +33,7 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   projects?: Project[];               
-  onDeleteProject: (projectId: string) => Promise<void>;
+  onDeleteProject: (projectId: number) => Promise<void>;
 }) {
 
   const [users, setUsers] = useState<Users[]>([])

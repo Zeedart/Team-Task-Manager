@@ -92,7 +92,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
         >
             {/* Title */}
             <div className="flex justify-between items-center">
-                <p className="text-sm font-medium text-gray-700 leading-snug">
+                <p className="text-sm font-medium text-gray-700 leading-snug truncate" title={task.title}>
                     {task.title}
                 </p>
                 <Popover>
@@ -113,7 +113,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                             </li>
                             <li>
                                 <Accordion
-                                    collapsible
+                                    collapsible="true"
                                     className="max-w-lg border border-0"
                                 >
                                     <AccordionItem value="changeStatus">

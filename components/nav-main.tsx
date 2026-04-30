@@ -96,7 +96,9 @@ export function NavMain({
                         href={subItem.url}
                         className="flex w-full items-center justify-between animate-fade-in-up"
                       >
-                        <span>{subItem.title}</span>
+                        <span className="truncate" title={subItem.title}>
+                          {subItem.title}
+                        </span>
 
                       </Link>
                       {/* Delete button – invisible until hover */}
