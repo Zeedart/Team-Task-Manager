@@ -8,16 +8,17 @@ import Image from "next/image"
 import NotFoundImg from "../../images/No_Projects_Found.png"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { Project } from "../data/types"
-
+import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext"
 
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([])
     const [loading, setLoading] = useState(true)
+    const workspaceId = useWorkspace()
 
     useEffect(() => {
         async function fetchProjects() {
-            const { data, error } = await client.from("projects").select("*")
+            const { data, error } = await client.from("projects").select("*").eq("workspace_id", workspaceId)
             if (error) {
                 console.error("Error fetching projects:", error)
             } else {
@@ -60,8 +61,6 @@ export default function Projects() {
         console.log("here we are")
     }
 
-    console.log("PROJECTS:", projects)
-    console.log("URLS:", projects.map(p => p.url))
 
     if (!projects || projects.length === 0) {
         return (

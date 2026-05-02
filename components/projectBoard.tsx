@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select"
 
 import { toast } from "sonner"
+import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext"
 
 export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, onDeleteTask, onUpdateTask }: 
     {
@@ -37,6 +38,8 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
         onUpdateTask?: (taskId: number, newStatus: Tasks['status']) => Promise<void>
     }
 ) {
+
+    const workspaceId = useWorkspace()
 
     const projectid = parseInt(projectID)
 
@@ -61,22 +64,22 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
     }
 
     useEffect(() => {
-        async function fetchUsers() {
-            const { data, error } = await client.from("users").select("*")
+    async function fetchMembers() {
+      if (!workspaceId) return;
+      const { data, error } = await client
+        .from("workspace_members")
+        .select("user_id, users(*)")
+        .eq("workspace_id", workspaceId);
 
-            if (error) {
-                return console.log("FAILED TO FETCH USERS:", error)
-            }
-            else {
-                setUsers(data)
-            }
-
-            setLoading(false)
-        }
-
-        fetchUsers()
-
-    }, [])
+      if (!error) {
+        setUsers(data.map((m) => m.users));
+        setLoading(false);
+      } else {
+        console.error("Failed to fetch workspace members:", error);
+      }
+    }
+    fetchMembers();
+  }, [workspaceId]);
 
     async function handleNewTask() {
     setInputLoading(true);

@@ -10,6 +10,7 @@ import { format, parseISO } from 'date-fns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import handleNewActivity from "@/lib/handleActivityLog"
+import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext"
 
 export default function ProjectDetails() {
   const { projectID } = useParams<{ projectID: string }>()
@@ -17,6 +18,7 @@ export default function ProjectDetails() {
   const [tasks, setTasks] = useState<Tasks[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const workspaceId = useWorkspace()
 
 
   const handleUpdateTask = async (taskId: number, newStatus: Tasks['status']) => {
@@ -38,7 +40,7 @@ export default function ProjectDetails() {
 
       setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
       toast.success("Task status updated");
-      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> changed the status of task <strong>${taskTitle}</strong> in project <strong>${projectTitle}</strong> to <strong>${typedStatus}</strong>`, user)
+      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> changed the status of task <strong>${taskTitle}</strong> in project <strong>${projectTitle}</strong> to <strong>${typedStatus}</strong>`, user, workspaceId)
   }
 
 
@@ -57,7 +59,7 @@ export default function ProjectDetails() {
     // Remove from state (animation has already finished in the child)
     setTasks(prev => prev.filter(task => task.id !== taskId));
     toast.success("Task deleted");
-      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user)
+      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user, workspaceId)
   };
 
 
@@ -81,26 +83,40 @@ export default function ProjectDetails() {
   // Fetch projects + tasks
   useEffect(() => {
     async function fetchData() {
-      const [projectsRes, tasksRes] = await Promise.all([
-        client.from("projects").select("*"),
-        client.from("tasks").select("*"),
-      ])
+      if (!workspaceId) return; // wait until workspace is ready
 
-      if (projectsRes.error || tasksRes.error) {
-        console.error(
-          "Error fetching:",
-          projectsRes.error || tasksRes.error
-        )
-      } else {
-        setProjects(projectsRes.data ?? [])
-        setTasks(tasksRes.data ?? [])
+      // 1. Fetch projects for this workspace
+      const projectsRes = await client
+        .from("projects")
+        .select("*")
+        .eq("workspace_id", workspaceId);
+
+      if (projectsRes.error) {
+        console.error("Error fetching projects:", projectsRes.error);
+        setLoading(false);
+        return;
       }
 
-      setLoading(false)
+      const projectsData = projectsRes.data ?? [];
+      const projectIds = projectsData.map(p => p.id);
+
+      // 2. Fetch tasks that belong to those projects (and thus to this workspace)
+      const tasksRes = await client
+        .from("tasks")
+        .select("*")
+        .in("projectId", projectIds);
+
+      if (tasksRes.error) {
+        console.error("Error fetching tasks:", tasksRes.error);
+      }
+
+      setProjects(projectsData);
+      setTasks(tasksRes.data ?? []);
+      setLoading(false);
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, [workspaceId]);   // 🔁 refetch if workspace changes (rare)
 
 
   const handleAddTask = async () => {
@@ -111,7 +127,7 @@ export default function ProjectDetails() {
 
   if (!error) {
     setTasks(data ?? []);
-    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> added a new task to <strong>${project?.title}</strong>`, user)
+    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> added a new task to <strong>${project?.title}</strong>`, user, workspaceId)
   }
 };
 

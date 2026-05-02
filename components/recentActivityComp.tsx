@@ -20,7 +20,7 @@ export default function RecentActivityComp({
         })
     }
     return (
-        <div className="p-6 w-[50%]">
+        <div className="p-6  w-[50%]">
             <h2 className="text-2xl font-bold text-[#172b4d] mb-4">
                 Recent Activity
             </h2>

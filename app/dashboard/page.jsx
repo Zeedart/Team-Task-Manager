@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"
 import useAuth from "@/hooks/useAuth.js"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext";
 
 export default function MainDashboard() {
     const [projects, setProjects] = useState([])
@@ -16,6 +17,7 @@ export default function MainDashboard() {
     const [loading1, setLoading1] = useState(true)
 
     const { user, loading } = useAuth();
+    const workspaceId = useWorkspace()
     const router = useRouter();
 
 
@@ -29,30 +31,53 @@ export default function MainDashboard() {
 
     useEffect(() => {
         async function fetchData() {
-            const [projectsRes, tasksRes, usersRes, activityRes] = await Promise.all([
-                client.from("projects").select("*"),
-                client.from("tasks").select("*"),
-                client.from("users").select("*"),
-                client.from("activity_logs").select("*")
-            ])
+            // 1. Fetch projects (already scoped)
+            const projectsRes = await client
+                .from("projects")
+                .select("id, title")                     
+                .eq("workspace_id", workspaceId);
 
-            if (projectsRes.error || tasksRes.error || usersRes.error || activityRes.error) {
-                console.error(
-                    "Error fetching:",
-                    projectsRes.error || tasksRes.error || usersRes.error || activityRes.error
-                )
-            } else {
-                setProjects(projectsRes.data)
-                setTasks(tasksRes.data)
-                setUsers(usersRes.data)
-                setActivities(activityRes.data)
+            if (projectsRes.error) {
+                console.error("Error fetching projects:", projectsRes.error);
+                setLoading1(false);
+                return;
             }
 
-            setLoading1(false)
+            const projectIds = projectsRes.data.map(p => p.id);
+
+            // 2. Fetch tasks only for those projects
+            const tasksRes = await client
+                .from("tasks")
+                .select("*")
+                .in("projectId", projectIds);
+
+            // 3. Fetch users – ideally you want only workspace members.
+            //    For now, we fetch all users (or you can fetch workspace members)
+            const usersRes = await client.from("users").select("*");
+
+            // 4. Fetch activities (already scoped)
+            const activityRes = await client
+                .from("activity_logs")
+                .select("*")
+                .eq("workspace_id", workspaceId);
+
+            // Handle all errors
+            if (tasksRes.error || usersRes.error || activityRes.error) {
+                console.error("Error fetching:", tasksRes.error || usersRes.error || activityRes.error);
+            } else {
+                setProjects(projectsRes.data);
+                setTasks(tasksRes.data);
+                setUsers(usersRes.data);
+                setActivities(activityRes.data);
+            }
+
+            setLoading1(false);
         }
 
-        fetchData()
-    }, [])
+        if (workspaceId) fetchData();  // only run when workspaceId is available
+    }, [workspaceId]);               // re-fetch if workspaceId changes (rare)
+
+
 
     if (loading1) {
         return (

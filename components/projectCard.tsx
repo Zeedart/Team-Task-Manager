@@ -31,29 +31,29 @@ export default function ProjectCard({ project }: Props) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchTasks() {
-      const { data, error } = await client
-        .from("tasks") // ✅ FIXED (was "projects")
-        .select("*")
+  async function fetchTasks() {
+    const { data, error } = await client
+      .from("tasks")
+      .select("*")
+      .eq("projectId", project.id);
 
-      if (error) {
-        console.error("Error fetching tasks:", error)
-      } else {
-        setTasks(data || [])
-      }
-
-      setLoading(false)
+    if (error) {
+      console.error("Error fetching tasks:", error);
+    } else {
+      setTasks(data || []);
     }
 
-    fetchTasks()
-  }, [])
+    setLoading(false);
+  }
+
+  fetchTasks();
+}, [project.id]); 
+
 
   // ----------------------------
   // FILTER TASKS FOR THIS PROJECT
   // ----------------------------
-  const projectTasks = tasks.filter(
-    task => task.projectId === project.id
-  )
+  const projectTasks = tasks; 
 
   const totalTasks = projectTasks.length
 
