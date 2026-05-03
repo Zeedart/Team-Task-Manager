@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import client from "@/api/client";
 import useAuth from "@/hooks/useAuth";
+import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon";
 
 const WorkspaceContext = createContext<number | null>(null);
 
@@ -83,7 +84,9 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   }, [user, loading]);
 
   if (loading || !workspaceId) {
-    return <div className="p-6">Loading workspace...</div>;
+    return <div className="p-6 flex items-center justify-center min-h-screen">
+  <LoaderCircleIcon size={50} className="animate-spin text-blue-500" />
+</div>
   }
 
   return (

@@ -8,7 +8,6 @@ export default function RecentActivityComp({
     users: Users[]
 }) {
 
-
     function formatTime(date: string) {
         return new Date(date).toLocaleString("en-GB", {
             day: "2-digit",
@@ -27,7 +26,7 @@ export default function RecentActivityComp({
 
             <ul className="space-y-4">
                 {recentActivity.slice(-6).reverse().map((activity) => {
-                    const user = users.find(u => u.id === activity.user_id)
+                    const user = users.find(u => u.id === activity.user_id )
 
                     return (
                         <li key={activity.id} className="flex items-start space-x-3">
