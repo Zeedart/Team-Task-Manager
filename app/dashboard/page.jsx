@@ -153,14 +153,14 @@ export default function MainDashboard() {
     return (
         <div className="p-6">
             <h1 className="text-3xl font-bold text-[#172b4d]">Dashboard</h1>
-            <h2 className="text-lg mt-2 ml-6 font-semibold text-gray-700">Overview</h2>
-            <div className="mt-6 ml-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <h2 className="text-lg mt-2 md:ml-6 lg:ml-6 font-semibold text-gray-700">Overview</h2>
+            <div className="mt-6 md:ml-6 lg:ml-6  grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
                 <DataCard title="Total Projects" value={totalProjects} />
                 <DataCard title="Total Tasks" value={tasks.length} />
                 <DataCard title="Tasks Assigned to me" value={curUserTasks} />
                 <DataCard title="Tasks Completed" value={totalTaskCompleted} />
             </div>
-            <div className="mt-10 w-full flex">
+            <div className="mt-10 w-full flex flex-col md:flex-row gap-6 lg:gap-6">
                 <RecentActivityComp users={users} recentActivity={activities} />
                 <MyTasks tasks={tasks} />
             </div>

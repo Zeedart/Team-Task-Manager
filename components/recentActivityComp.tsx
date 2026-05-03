@@ -19,8 +19,8 @@ export default function RecentActivityComp({
         })
     }
     return (
-        <div className="p-6  w-[50%]">
-            <h2 className="text-2xl font-bold text-[#172b4d] mb-4">
+        <div className="p-6 w-full md:w-[50%] lg:w-[50%]">
+            <h2 className="text-2xl text-center md:text-left font-bold text-[#172b4d] mb-8 md:mb-6 lg:mb-6">
                 Recent Activity
             </h2>
 
@@ -40,9 +40,6 @@ export default function RecentActivityComp({
 
 
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-[#172b4d]">
-                                    {user?.username}
-                                </p>
 
                                 <p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: activity.description }} />
 
