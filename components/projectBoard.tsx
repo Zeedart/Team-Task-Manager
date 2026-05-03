@@ -108,7 +108,7 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
 
 
     return (
-        <div className="rounded-lg border w-80 bg-gray-100 bg-card text-card-foreground flex flex-col h-full">
+       <div className="rounded-lg border w-full bg-gray-100 flex flex-col">
 
             {/* Header */}
             <header className="w-full flex justify-between items-center px-3 py-2">

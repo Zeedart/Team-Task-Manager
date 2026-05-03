@@ -86,7 +86,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
             className={`rounded-lg border bg-white p-4 shadow-sm
     transition-all duration-300
     animate-fade-in-up
-    w-70
+    w-full
     ${isLeaving ? "opacity-0 scale-95 max-h-0 p-0 mb-0 border-0" : "opacity-100 scale-100 max-h-96"}
   `}
         >
@@ -102,7 +102,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                         </Button>
                     </PopoverTrigger>
 
-                    <PopoverContent className="rounded-md p-2 w-70" align="start">
+                    <PopoverContent className="rounded-md p-2 w-64" align="start">
                         <ul>
                             <li className="px-1 py-2 cursor-pointer">
                                 <button onClick={handleDelete}

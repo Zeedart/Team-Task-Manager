@@ -234,7 +234,7 @@ export default function ProjectDetails() {
         <hr className="border border-gray-200" />
       </header>
 
-      <div className="mt-6 w-full ml-6 grid gap-70 h-60 md:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-6 px-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:gap-6">
         <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
         <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
         <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
