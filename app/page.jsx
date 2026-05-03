@@ -26,10 +26,10 @@ export default function Page() {
     }, [loading, user])
 
     return (
-        <div className="flex items-center justify-center space-x-55 min-h-screen bg-[#f4f5f7]">
-            <div className="p-5">
-                <h1 className="text-3xl font-bold text-[#172b4d] mb-5">Welcome to Team Task Manager</h1>
-                <p className="text-lg text-[#172b4d] mb-5">Your all-in-one solution for managing team tasks and projects efficiently.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-8 min-h-screen bg-[#f4f5f7] p-4 ">
+            <div className="p-5 w-full md:w-1/2">
+                <h1 className="text-3xl text-center md:text-left font-bold text-[#172b4d] mb-5">Welcome to Team Task Manager</h1>
+                <p className="text-lg text-center md:text-left text-[#172b4d] mb-5">Your all-in-one solution for managing team tasks and projects efficiently.</p>
             </div>
             {loading ?
              <SkeletonTheme>

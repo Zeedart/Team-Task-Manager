@@ -37,7 +37,7 @@ export default function Login() {
         }
     }
   return (
-    <Card className="w-[400px]">
+    <Card className="md:w-[400px] w-[40%] min-w-[300px]">
       
       <CardHeader>
         <CardTitle className="text-[#172b4d] text-xl font-bold">
