@@ -119,12 +119,13 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
                     <span className="text-gray-600 text-sm">{tasks.length}</span>
                 </div>
 
-                <Popover>
-                    <PopoverTrigger >
-                        <Button variant="ghost" className="hover:text-blue-500">
-                            +
-                        </Button>
-                    </PopoverTrigger>
+                {status != "To do" && (
+                    <Popover>
+                        <PopoverTrigger >
+                            <Button variant="ghost" className="hover:text-blue-500">
+                                +
+                            </Button>
+                        </PopoverTrigger>
 
                     <PopoverContent className="w-80">
                         <div className="grid gap-4">
@@ -196,7 +197,7 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
 
                         </div>
                     </PopoverContent>
-                </Popover>
+                </Popover>)}
             </header>
 
             

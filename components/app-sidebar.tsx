@@ -28,51 +28,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 // This is sample data.
 
 export function AppSidebar({
-  projects: externalProjects,     
+  projects: externalProjects,
   onDeleteProject,
+  currentUser,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  projects?: Project[];               
+  projects?: Project[];
   onDeleteProject: (projectId: number) => Promise<void>;
+  currentUser: Users | null;
 }) {
-
-  const [users, setUsers] = useState<Users[]>([])
-  const [userLoading, setUserLoading] = useState(true)
-
-
-
-  useEffect(() => {
-    async function fetchUsers() {
-      const { data, error } = await client.from("users").select("*")
-
-      if (error) {
-        console.log("Failed to Fetch Users")
-      } else {
-        setUsers(data)
-      }
-
-      setUserLoading(false)
-    }
-
-    fetchUsers()
-  }, [])
-
-  const [currentUserData, setCurrentUserData] = useState<Users | null>(null)
-
-  useEffect(() => {
-    async function getCurrentUser() {
-      const { data: { user }, error } = await client.auth.getUser()
-
-      if (error) {
-        console.log("Error getting user:", error)
-      } else if (user) {
-        setCurrentUserData(users.find((userItem) => userItem.id === user.id) || null)
-        console.log("USERDATA : ", currentUserData)
-      }
-    }
-
-    getCurrentUser()
-  }, [users]) // Re-run when users array loads
 
 
   const navMain = [
@@ -111,9 +75,18 @@ export function AppSidebar({
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="ml-5 flex space-x-10 items-center-safe">
-          <Image src={LOGO} alt="logo" width={37} height={35} />
-          <p className="font-bold text-[30px] text-[#172b4d]">Taskora</p>
+        <div className="flex items-center gap-3 px-2 py-1 overflow-hidden">
+          <Image
+            src={LOGO}
+            alt="logo"
+            width={37}
+            height={35}
+            className="shrink-0"
+          />
+          <span className="font-bold text-[20px] text-[#172b4d] truncate transition-opacity duration-200
+      opacity-100 group-data-[state=collapsed]:opacity-0 group-data-[state=collapsed]:w-0">
+            Taskora
+          </span>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -122,8 +95,8 @@ export function AppSidebar({
         <NavProjects items={tasks} />
       </SidebarContent>
       <SidebarFooter>
-        {currentUserData ? (
-          <NavUser user={currentUserData} />
+        {currentUser ? (
+          <NavUser user={currentUser} />
         ) : (
           // optional: loading skeleton
           <div className="p-4 flex items-center space-x-4">
