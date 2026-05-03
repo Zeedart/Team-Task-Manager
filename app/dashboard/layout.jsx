@@ -258,8 +258,6 @@ function MainLayoutContent({ children }) {
               </div>
             </PopoverContent>
           </Popover>
-
-          <SettingsIcon size={30} />
           {currentUser ? (
             <div className="flex p-5 gap-4 items-center">
               <Popover>
