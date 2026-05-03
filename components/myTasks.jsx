@@ -29,8 +29,8 @@ export default function MyTasks({ tasks }) {
   if (loading || !user) return <p>Loading...</p>
 
   return (
-    <div className="p-6 w-[50%]">
-      <h2 className="text-2xl font-bold text-[#172b4d] mb-4">
+    <div className="p-6 w-full md:w-[50%] lg:w-[50%]">
+      <h2 className="text-2xl text-center md:text-left font-bold text-[#172b4d] mb-8 md:mb-6 lg:mb-6">
         My Tasks
       </h2>
 
@@ -39,11 +39,11 @@ export default function MyTasks({ tasks }) {
           .filter(task => task.assignedTo === user.id)
           .map(task => (
             <li key={task.id} className="flex items-start space-x-3">
-              <p className="text-xl font-medium text-[#172b4d]">
+              <p className="text-xl font-semibold text-[#172b4d]">
                 {task.title}
               </p>
 
-              <div className="mt-2">
+              <div>
                 <span
                   className={`rounded px-3 py-2 text-[12px] font-semibold
                   ${statusStyles[task.status]?.bg}
