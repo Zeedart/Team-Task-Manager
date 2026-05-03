@@ -126,8 +126,8 @@ export default function Tasks() {
   return (
     <div className="p-6 w-full">
       <h1 className="text-3xl font-bold text-[#172b4d]">Tasks</h1>
-      <h2 className="text-lg mt-2 ml-6 font-semibold text-gray-500">List of Tasks</h2>
-      <div className="w-full mt-6 ml-6">
+      <h2 className="text-lg mt-2 md:ml-6 lg:ml-6 font-semibold text-gray-700">List of Tasks</h2>
+      <div className="w-full mt-6 md:ml-6 lg:ml-6">
         <Table>
           <TableHeader>
             <TableRow>
