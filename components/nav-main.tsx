@@ -21,6 +21,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { set } from "date-fns"
 
 export function NavMain({
   items,
@@ -43,6 +44,7 @@ export function NavMain({
 }) {
 
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -128,11 +130,14 @@ export function NavMain({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={async () => {
+                        setIsDeleting(true);
                         if (deleteTarget === null) return;
                         await handleDelete(deleteTarget);
                         setDeleteTarget(null);
+                        setIsDeleting(false);
                       }}
                       className="bg-red-600 hover:bg-red-700"
+                      disabled={isDeleting}
                     >
                       Delete
                     </AlertDialogAction>
