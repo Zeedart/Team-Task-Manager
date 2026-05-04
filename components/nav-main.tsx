@@ -8,7 +8,6 @@ import {
 import { useRouter, usePathname } from "next/navigation"
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -20,9 +19,7 @@ import { ChevronRightIcon } from "lucide-react"
 import { Trash2Icon } from "@/components/ui/trash-2-icon"
 import Link from "next/link"
 import { JSX, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { set } from "date-fns"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 export function NavMain({
   items,
@@ -77,7 +74,6 @@ export function NavMain({
           >
             <div className="flex items-center w-full">
 
-              {/* MAIN BUTTON */}
               <SidebarMenuButton tooltip={item.title}>
                 {item.icon}
 
@@ -86,7 +82,6 @@ export function NavMain({
                 </Link>
               </SidebarMenuButton>
 
-              {/* SEPARATE TRIGGER */}
               <CollapsibleTrigger className="ml-auto">
                 <ChevronRightIcon className="transition-transform duration-200 group-data-open/collapsible:rotate-90" />
               </CollapsibleTrigger>
@@ -106,10 +101,9 @@ export function NavMain({
                         {subItem.title}
                       </span>
 
-                      {/* Delete button – invisible until hover */}
                       <button
                         onClick={(e) => {
-                          e.stopPropagation() // prevent triggering the parent navigation
+                          e.stopPropagation()
                           setDeleteTarget(subItem.id)
                         }}
                         className="opacity-100 text-red-500 xl:opacity-0 mt-3 h-full  group-hover/hoverEffect:opacity-100 hover:text-red-500 transition-opacity"
@@ -120,8 +114,6 @@ export function NavMain({
                   </SidebarMenuSubItem>
                 ))}
               </SidebarMenuSub>
-
-              {/* Confirmation dialog */}
               <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
                 <AlertDialogContent>
                   <AlertDialogHeader>

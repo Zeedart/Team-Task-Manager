@@ -24,14 +24,14 @@ export default function MainDashboard() {
     // Auth redirect
     useEffect(() => {
         if (!loading && !user) {
-            router.replace("/"); // redirect to login
+            router.replace("/");
         }
     }, [loading, user, router]);
 
 
     useEffect(() => {
         async function fetchData() {
-            // 1. Fetch projects (already scoped)
+            // 1. Fetch projects
             const projectsRes = await client
                 .from("projects")
                 .select("id, title")                     
@@ -51,11 +51,10 @@ export default function MainDashboard() {
                 .select("*")
                 .in("projectId", projectIds);
 
-            // 3. Fetch users – ideally you want only workspace members.
-            //    For now, we fetch all users (or you can fetch workspace members)
+            // 3. Fetch users
             const usersRes = await client.from("users").select("*");
 
-            // 4. Fetch activities (already scoped)
+            // 4. Fetch activities 
             const activityRes = await client
                 .from("activity_logs")
                 .select("*")
@@ -74,19 +73,16 @@ export default function MainDashboard() {
             setLoading1(false);
         }
 
-        if (workspaceId) fetchData();  // only run when workspaceId is available
-    }, [workspaceId]);               // re-fetch if workspaceId changes (rare)
+        if (workspaceId) fetchData();  
+    }, [workspaceId]);              
 
 
 
     if (loading1 | loading | !user) {
         return (
             <div className="p-6">
-                {/* Title */}
                 <Skeleton className="h-8 w-50 mb-2 bg-gray-200" />
                 <Skeleton className="h-5 w-32 ml-6 mt-5 mb-6 bg-gray-200" />
-
-                {/* Cards */}
                 <div className="mt-6 ml-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {[...Array(4)].map((_, i) => (
                         <div key={i} className="rounded-lg border w-80 p-10">
@@ -96,10 +92,8 @@ export default function MainDashboard() {
                     ))}
                 </div>
 
-                {/* Bottom section */}
                 <div className="mt-10 w-full flex gap-6">
 
-                    {/* Recent Activity Skeleton */}
                     <div className="p-6 w-[50%]">
                         <Skeleton className="h-7 w-60 mb-6 bg-gray-200" />
 
@@ -118,7 +112,6 @@ export default function MainDashboard() {
                         </ul>
                     </div>
 
-                    {/* My Tasks Skeleton */}
                     <div className="p-6 w-[50%]">
                         <Skeleton className="h-7 bg-gray-200 w-40 mb-6" />
 

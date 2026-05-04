@@ -8,7 +8,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 
 export default function TaskCard({ task, users, onDelete, onUpdate }: {
     task: Tasks
@@ -40,14 +40,11 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
         if (!onDelete) return;
         setIsLeaving(true);
 
-        // Wait for the animation to complete (sync with CSS duration)
         await new Promise(resolve => setTimeout(resolve, 300));
 
         try {
             await onDelete(task.id);
-            // No need to revert – the parent will remove this card from the list
         } catch (error) {
-            // If deletion fails, bring the card back
             setIsLeaving(false);
         }
     };
@@ -90,7 +87,6 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
     ${isLeaving ? "opacity-0 scale-95 max-h-0 p-0 mb-0 border-0" : "opacity-100 scale-100 max-h-96"}
   `}
         >
-            {/* Title */}
             <div className="flex justify-between items-center">
                 <p className="text-sm font-medium text-gray-700 leading-snug truncate" title={task.title}>
                     {task.title}
@@ -122,7 +118,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                                                     <Select value={currentStatus} onValueChange={(newStatus) => {
                                                         const typed = newStatus as Tasks["status"];
                                                         setCurrentStatus(typed);
-                                                        onUpdate?.(task.id, typed);          // immediate sync
+                                                        onUpdate?.(task.id, typed); 
                                                     }}
                                                     >
                                                         <SelectTrigger className="w-full">
@@ -149,7 +145,6 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
 
             </div>
 
-            {/* Status tag */}
             <div className="mt-1">
                 <span className={`rounded px-3 py-2 text-[12px] font-semibold 
                     ${style.bg} ${style.text} ${style.border}`}>
@@ -157,9 +152,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                 </span>
             </div>
 
-            {/* User row */}
             <div className="mt-4 flex gap-4">
-                {/* Avatar */}
                 <img
                     src={user?.avatar_url}
                     alt="user"

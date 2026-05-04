@@ -130,19 +130,15 @@ function MainLayoutContent({ children }) {
   }
 
   return (
-    // ✅ SidebarProvider wraps everything so header trigger + sidebar share context
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
 
         <AppSidebar projects={projects} onDeleteProject={handleDeleteProject} currentUser={currentUser} />
 
-        {/* Right side: header + page content stacked vertically */}
         <div className="flex flex-col flex-1 min-w-0">
 
-          {/* HEADER — no hardcoded margin/width, grows naturally */}
           <header className="h-15 border-b border-gray-300 flex justify-between items-center px-4 shrink-0">
             <div className="flex items-center gap-3">
-              {/* ✅ Trigger now inside SidebarProvider context */}
               <SidebarTrigger />
               <Breadcrumb>
                 <BreadcrumbList>
@@ -226,8 +222,6 @@ function MainLayoutContent({ children }) {
               )}
             </div>
           </header>
-
-          {/* PAGE CONTENT */}
           <main className="flex-1">{children}</main>
         </div>
       </div>

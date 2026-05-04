@@ -13,11 +13,6 @@ export default function Page() {
     const { user, loading } = useAuth();
     const router = useRouter()
 
-    //const loggedIn = true; // Simulate authentication status
-    //if (loggedIn) {
-    //   return redirect("/dashboard");
-    //}
-
     useEffect(() => {
         if (!loading && user) {
             router.push("/dashboard")

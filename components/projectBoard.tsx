@@ -8,12 +8,9 @@ import type { Users } from "@/app/dashboard/data/types"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Ghost } from "lucide-react"
 import {LoaderCircleIcon} from "@/components/ui/loader-circle-icon"
 import {
     Field,
-    FieldDescription,
-    FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
 
@@ -22,7 +19,6 @@ import {
     SelectContent,
     SelectItem,
     SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select"
 
 import { toast } from "sonner"

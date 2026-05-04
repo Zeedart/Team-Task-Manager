@@ -5,7 +5,6 @@ import * as React from "react"
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -13,19 +12,14 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, FrameIcon, PieChartIcon, MapIcon, User } from "lucide-react"
 import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
 import LOGO from "@/app/images/LOGO.svg"
 import Image from 'next/image';
-import { useEffect, useState } from "react"
 import type { Project, Users } from "@/app/dashboard/data/types.js"
-import client from "@/api/client.js"
 import { Skeleton } from "@/components/ui/skeleton"
 
-
-// This is sample data.
 
 export function AppSidebar({
   projects: externalProjects,
@@ -47,7 +41,7 @@ export function AppSidebar({
     isActive: true,
     items: (externalProjects ?? []).map(p => ({
       ...p,
-      url: `/dashboard/projects/${p.id}`, // ← guaranteed string, no undefined
+      url: `/dashboard/projects/${p.id}`,
     }))
   }
 ]

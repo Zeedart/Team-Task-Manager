@@ -1,4 +1,3 @@
-// components/AvatarUpload.tsx
 "use client"
 import { useState } from "react"
 import client from "@/api/client"
@@ -12,7 +11,7 @@ export default function AvatarUpload({ userId, currentUrl }: { userId: string; c
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type/size (optional)
+    // Validate file type/size 
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file")
       return

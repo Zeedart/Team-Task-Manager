@@ -12,7 +12,6 @@ import { useState, useEffect } from "react";
 import client from "@/api/client";
 import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext";
 
-// Minimal type definitions (adjust as needed)
 interface Task {
   id: number;
   title: string;
@@ -30,7 +29,7 @@ interface User {
 }
 
 export default function Tasks() {
-  const workspaceId = useWorkspace(); // ✅ get current workspace
+  const workspaceId = useWorkspace(); 
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -83,7 +82,6 @@ export default function Tasks() {
     fetchData();
   }, [workspaceId]);
 
-  // Loading skeleton (unchanged from your original)
   if (loading) {
     return (
       <div className="p-6 w-full">

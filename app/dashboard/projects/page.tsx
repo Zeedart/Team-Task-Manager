@@ -38,16 +38,14 @@ export default function Projects() {
                 {Array.from({ length: 7 }).map((_, i) => (
                     <div key={i} className="border flex w-90 gap-4 flex-col rounded-lg p-6 transition-all duration-200">
 
-                        {/* Title + date */}
                         <div className="space-y-2">
-                            <Skeleton className="h-5 w-3/4 bg-gray-300" />   {/* title */}
-                            <Skeleton className="h-4 w-1/2 bg-gray-300" />   {/* date */}
+                            <Skeleton className="h-5 w-3/4 bg-gray-300" />   
+                            <Skeleton className="h-4 w-1/2 bg-gray-300" /> 
                         </div>
 
-                        {/* Progress bar */}
                         <div className="space-y-2">
-                            <Skeleton className="h-3 w-1/3 bg-gray-300" />              {/* label */}
-                            <Skeleton className="h-4 w-full rounded-full bg-gray-300" /> {/* progress bar */}
+                            <Skeleton className="h-3 w-1/3 bg-gray-300" />              
+                            <Skeleton className="h-4 w-full rounded-full bg-gray-300" /> 
                         </div>
 
                     </div>

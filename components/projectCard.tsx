@@ -18,14 +18,12 @@ type Props = {
 export default function ProjectCard({ project }: Props) {
 
   // ----------------------------
-  // DATE FORMAT (SAFE)
+  // DATE FORMAT
   // ----------------------------
   const formatted = project.createdOn
     ? format(parseISO(project.createdOn), "dd MMM yyyy")
     : ""
 
-  // ----------------------------
-  // TASKS STATE
   // ----------------------------
   const [tasks, setTasks] = useState<Tasks[]>([])
   const [loading, setLoading] = useState(true)
@@ -70,7 +68,7 @@ export default function ProjectCard({ project }: Props) {
   ).length
 
   // ----------------------------
-  // PROGRESS (SAFE)
+  // PROGRESS
   // ----------------------------
   const progress =
     totalTasks === 0
@@ -81,9 +79,6 @@ export default function ProjectCard({ project }: Props) {
         totalTasks *
         100
 
-  // ----------------------------
-  // UI
-  // ----------------------------
   return (
     <div className="border flex w-90 gap-2 flex-col rounded-lg p-6 transition-all duration-200 cursor-pointer
       hover:shadow-lg hover:-translate-y-1 hover:border-blue-400 bg-white">

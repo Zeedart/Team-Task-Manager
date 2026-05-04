@@ -173,19 +173,16 @@ export default function ProjectDetails() {
     (project) => project.id === Number(projectID)
   )
 
-  // Not found state
   if (!project) {
     return notFound()
   }
 
   const currentUserId = user?.id
 
-  // Project tasks
   const projectTasks = tasks.filter(
     (task) => task.projectId === project.id
   )
 
-  // User tasks (not completed)
   const curUserTasks = tasks.filter(
     (task) =>
       task.assignedTo === currentUserId &&
@@ -193,7 +190,6 @@ export default function ProjectDetails() {
       task.status !== "Completed"
   )
 
-  // Split by status
   const inReview = projectTasks.filter(
     (task) => task.status === "In Review"
   )

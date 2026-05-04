@@ -1,4 +1,5 @@
 import useAuth from "@/hooks/useAuth"
+import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
 
 export default function MyTasks({ tasks }) {
   const { user, loading } = useAuth()
@@ -26,7 +27,7 @@ export default function MyTasks({ tasks }) {
     },
   }
 
-  if (loading || !user) return <p>Loading...</p>
+  if (loading || !user) return <LoaderCircleIcon className="animate-spin" height={10} width={10} />
 
   return (
     <div className="p-6 w-full md:w-[50%] lg:w-[50%]">
