@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import client from "@/api/client"
 import type { Project, Tasks } from "../../data/types"
 import type { User } from "@supabase/supabase-js"
-import { useParams } from "next/navigation"
+import { notFound, useParams } from "next/navigation"
 import { format, parseISO } from 'date-fns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
@@ -35,7 +35,7 @@ export default function ProjectDetails() {
 
       if (error) { 
         toast.error("Failed to update task status");
-        throw error; // Let the child know it failed
+        throw error; 
       }
 
       setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
@@ -53,10 +53,10 @@ export default function ProjectDetails() {
 
     if (error) {
       toast.error("Failed to delete task");
-      throw error; // Let the child know it failed
+      throw error;
     }
 
-    // Remove from state (animation has already finished in the child)
+
     setTasks(prev => prev.filter(task => task.id !== taskId));
     toast.success("Task deleted");
       await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user, workspaceId)
@@ -64,7 +64,6 @@ export default function ProjectDetails() {
 
 
 
-  // Get logged-in user
   useEffect(() => {
     async function getUser() {
       const { data, error } = await client.auth.getUser()
@@ -80,12 +79,11 @@ export default function ProjectDetails() {
   }, [])
 
 
-  // Fetch projects + tasks
   useEffect(() => {
     async function fetchData() {
-      if (!workspaceId) return; // wait until workspace is ready
+      if (!workspaceId) return; 
 
-      // 1. Fetch projects for this workspace
+      
       const projectsRes = await client
         .from("projects")
         .select("*")
@@ -100,7 +98,7 @@ export default function ProjectDetails() {
       const projectsData = projectsRes.data ?? [];
       const projectIds = projectsData.map(p => p.id);
 
-      // 2. Fetch tasks that belong to those projects (and thus to this workspace)
+
       const tasksRes = await client
         .from("tasks")
         .select("*")
@@ -116,14 +114,14 @@ export default function ProjectDetails() {
     }
 
     fetchData();
-  }, [workspaceId]);   // 🔁 refetch if workspace changes (rare)
+  }, [workspaceId]);  
 
 
   const handleAddTask = async () => {
   const { data, error } = await client
     .from("tasks")
     .select("*")
-    .eq("projectId", Number(projectID));   // or fetch all if you prefer
+    .eq("projectId", Number(projectID)); 
 
   if (!error) {
     setTasks(data ?? []);
@@ -131,25 +129,20 @@ export default function ProjectDetails() {
   }
 };
 
-  // Loading state
+
   if (loading) {
     return (
       <div className="p-6 h-[30%] w-[80%]">
-        <header>
-          {/* Title */}
+        <header>          
           <Skeleton className="h-14  w-90 bg-gray-200 ml-2" />
-
-          {/* Subtitle */}
           <Skeleton className="h-9 w-50 mt-3 bg-gray-200 mb-5 ml-6" />
-
         </header>
 
-        {/* Boards */}
+
         <div className="mt-18 ml-10 gap-4 flex">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="w-85 h-60 rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col">
 
-              {/* Header */}
               <header className="w-full flex justify-between bg-gray-200 items-center px-3 py-2">
                 <div className="flex gap-3 items-center">
                   <Skeleton className="h-4 w-24" />
@@ -159,7 +152,6 @@ export default function ProjectDetails() {
                 <Skeleton className="h-6 w-6 rounded" />
               </header>
 
-              {/* Tasks list */}
               <div className="flex-1 px-2 bg-gray-200 pb-3 overflow-hidden">
                 <ol className="flex flex-col gap-3">
                   {Array.from({ length: 2 }).map((_, i) => (
@@ -177,14 +169,13 @@ export default function ProjectDetails() {
     )
   }
 
-  // Find current project
   const project = projects.find(
     (project) => project.id === Number(projectID)
   )
 
   // Not found state
   if (!project) {
-    return <div>Project not found</div>
+    return notFound()
   }
 
   const currentUserId = user?.id

@@ -1,7 +1,7 @@
 export type Tasks = {
   id: number;
   title: string;
-  status?: "In Review" | "In Progress" | "Completed";  // restrict to these values
+  status?: "In Review" | "In Progress" | "Completed"; 
   projectId?: number;
   assignedTo: string; 
 };
@@ -17,8 +17,8 @@ export type Project = {
   id: number;
   user_id: string;
   title: string;
-  url?: string;       // optional, based on your previous code
-  createdOn: string;  // could be Date if you parse it
+  url?: string;      
+  createdOn: string; 
 };
 
 export type Activity_log = {

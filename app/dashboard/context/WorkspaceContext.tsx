@@ -12,7 +12,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const [workspaceId, setWorkspaceId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (loading || !user) return; // wait until auth is ready
+    if (loading || !user) return;
     const currentUser = user;
 
     async function initWorkspace() {
