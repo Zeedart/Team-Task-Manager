@@ -79,7 +79,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
         },
     };
 
-
+    const style = statusStyles[task.status ?? "To do"] ?? statusStyles["To do"]
 
     return (
         <div
@@ -96,11 +96,8 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                     {task.title}
                 </p>
                 <Popover>
-                    <PopoverTrigger className="m-0 p-0">
-                        <Button variant="ghost" className="hover:text-blue-500">
-                            <EllipsisIcon />
-                        </Button>
-                    </PopoverTrigger>
+                    <PopoverTrigger render={<Button variant="ghost" className="hover:text-blue-500"><EllipsisIcon /></Button>} className="m-0 p-0" />
+
 
                     <PopoverContent className="rounded-md p-2 w-64" align="start">
                         <ul>
@@ -113,7 +110,6 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
                             </li>
                             <li>
                                 <Accordion
-                                    collapsible="true"
                                     className="max-w-lg border border-0"
                                 >
                                     <AccordionItem value="changeStatus">
@@ -156,8 +152,7 @@ export default function TaskCard({ task, users, onDelete, onUpdate }: {
             {/* Status tag */}
             <div className="mt-1">
                 <span className={`rounded px-3 py-2 text-[12px] font-semibold 
-                    ${statusStyles[task.status].bg
-                    } ${statusStyles[task.status].text} ${statusStyles[task.status].border}`}>
+                    ${style.bg} ${style.text} ${style.border}`}>
                     {task.status}
                 </span>
             </div>

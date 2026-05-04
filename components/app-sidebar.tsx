@@ -34,22 +34,23 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   projects?: Project[];
-  onDeleteProject: (projectId: number) => Promise<void>;
+  onDeleteProject: (projectId: number | string) => Promise<void>;
   currentUser: Users | null;
 }) {
 
 
   const navMain = [
-    {
-      title: "Projects",
-      url: "/dashboard/projects",
-      icon: (
-        <RocketIcon
-        />
-      ),
-      isActive: true,
-      items: externalProjects ?? []
-    }]
+  {
+    title: "Projects",
+    url: "/dashboard/projects",
+    icon: <RocketIcon />,
+    isActive: true,
+    items: (externalProjects ?? []).map(p => ({
+      ...p,
+      url: `/dashboard/projects/${p.id}`, // ← guaranteed string, no undefined
+    }))
+  }
+]
 
   const dashboard = [
     {

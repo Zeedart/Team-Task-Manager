@@ -72,7 +72,8 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
         .eq("workspace_id", workspaceId);
 
       if (!error) {
-        setUsers(data.map((m) => m.users));
+        setUsers(data.flatMap((m) => m.users));
+        console.log("Fetched workspace members:", data.map((m) => m.users));
         setLoading(false);
       } else {
         console.error("Failed to fetch workspace members:", error);
@@ -121,11 +122,9 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
 
                 {status != "To do" && (
                     <Popover>
-                        <PopoverTrigger >
-                            <Button variant="ghost" className="hover:text-blue-500">
+                        <PopoverTrigger render={<Button variant="ghost" className="hover:text-blue-500">
                                 +
-                            </Button>
-                        </PopoverTrigger>
+                            </Button>} />
 
                     <PopoverContent className="w-80">
                         <div className="grid gap-4">

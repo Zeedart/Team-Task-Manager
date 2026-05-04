@@ -79,7 +79,7 @@ export default function MainDashboard() {
 
 
 
-    if (loading1) {
+    if (loading1 | loading | !user) {
         return (
             <div className="p-6">
                 {/* Title */}

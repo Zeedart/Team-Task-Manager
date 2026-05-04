@@ -20,7 +20,7 @@ import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
 import AvatarUpload from "@/components/pfp/avatarUpload.tsx"
 import handleNewActivity from "@/lib/handleActivityLog.jsx"
 import { WorkspaceProvider, useWorkspace } from "./context/WorkspaceContext"
-
+import { PlusIcon } from "@/components/ui/plus-icon"
 export default function MainLayout({ children }) {
   return (
     <WorkspaceProvider>
@@ -150,12 +150,12 @@ function MainLayoutContent({ children }) {
                     <React.Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {index === breadcrumbs.length - 1 ? (
-                          <BreadcrumbPage className="text-primary font-semibold">
+                          <BreadcrumbPage className="text-primary font-semibold capitalize">
                             {crumb.label}
                           </BreadcrumbPage>
                         ) : (
-                          <BreadcrumbLink>
-                            <Link href={crumb.href}>{crumb.label}</Link>
+                          <BreadcrumbLink render={<Link href={crumb.href} />} className="capitalize">
+                            {crumb.label}
                           </BreadcrumbLink>
                         )}
                       </BreadcrumbItem>
@@ -168,8 +168,15 @@ function MainLayoutContent({ children }) {
 
             <div className="flex gap-4 items-center">
               <Popover>
-                <PopoverTrigger asChild>
-                  <Button className="bg-blue-600 hover:bg-blue-700">+ New Project</Button>
+                <PopoverTrigger
+                  render={
+                    <button className="inline-flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 cursor-pointer text-sm font-medium
+      p-2 rounded-full
+      md:px-4 md:py-2 md:rounded-2xl" />
+                  }
+                >
+                  <PlusIcon className="h-5 w-5 md:hidden" />
+                  <span className="hidden md:inline">+ New Project</span>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <div className="grid gap-4">
@@ -200,13 +207,16 @@ function MainLayoutContent({ children }) {
 
               {currentUser ? (
                 <Popover>
-                  <PopoverTrigger asChild>
-                    <img
-                      src={currentUser.avatar_url}
-                      className="w-10 h-10 rounded-full cursor-pointer"
-                      alt="profile"
-                    />
-                  </PopoverTrigger>
+                  <PopoverTrigger
+                    nativeButton={false}
+                    render={
+                      <img
+                        src={currentUser.avatar_url}
+                        className="w-10 h-10 rounded-full cursor-pointer"
+                        alt="profile"
+                      />
+                    }
+                  />
                   <PopoverContent className="w-80">
                     <AvatarUpload userId={currentUser.id} currentUrl={currentUser.avatar_url} />
                   </PopoverContent>

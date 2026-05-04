@@ -29,7 +29,7 @@ export function NavUser({
   user,
 }: {
   user: {
-    id: number
+    id: string
     username: string
     email: string
     avatar_url?: string

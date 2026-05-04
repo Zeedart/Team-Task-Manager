@@ -2,6 +2,10 @@ import { useContext } from "react";
 
 import {AuthContext} from "../components/context/AuthProvider"
 
+/**
+ * @returns {{ user: import("@supabase/supabase-js").User | null, loading: boolean }}
+ */
+
 const useAuth = () => {
     const context = useContext(AuthContext);
 
