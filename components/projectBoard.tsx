@@ -1,14 +1,14 @@
 "use client"
+
 import TaskCard from "@/components/task-card"
 import { Button } from "@/components/ui/button"
-import type { Tasks } from "@/app/dashboard/data/types"
-import { useState, useEffect } from "react"
+import type { Tasks, Users } from "@/app/dashboard/data/types"
+import { useState } from "react"
 import client from "@/api/client"
-import type { Users } from "@/app/dashboard/data/types"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {LoaderCircleIcon} from "@/components/ui/loader-circle-icon"
+import { LoaderCircleIcon } from "@/components/ui/loader-circle-icon"
 import {
     Field,
     FieldLabel,
@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/select"
 
 import { toast } from "sonner"
-import { useWorkspace } from "@/app/dashboard/context/WorkspaceContext"
 
-export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, onDeleteTask, onUpdateTask }: 
+export default function ProjectBoard({ status, tasks, users, projectID, onTaskCreated, onDeleteTask, onUpdateTask }:
     {
         status: string,
         tasks: Tasks[],
+        users: Users[],
         projectID: string,
         onTaskCreated?: () => Promise<void>,
         onDeleteTask?: (taskId: number) => Promise<void>,
@@ -35,14 +35,9 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
     }
 ) {
 
-    const workspaceId = useWorkspace()
-
     const projectid = parseInt(projectID)
 
-
-    const [users, setUsers] = useState<Users[]>([])
     const [inputLoading, setInputLoading] = useState(false)
-    const [loading, setLoading] = useState(true)
     const [title, setTitle] = useState("")
     const [selectedUserId, setSelectedUserId] = useState(null);
     const selectedUser = users.find((user) => user.id === selectedUserId);
@@ -59,55 +54,32 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
         return !newErrors.title && !newErrors.assignee;
     }
 
-    useEffect(() => {
-    async function fetchMembers() {
-      if (!workspaceId) return;
-      const { data, error } = await client
-        .from("workspace_members")
-        .select("user_id, users(*)")
-        .eq("workspace_id", workspaceId);
-
-      if (!error) {
-        setUsers(data.flatMap((m) => m.users));
-        console.log("Fetched workspace members:", data.map((m) => m.users));
-        setLoading(false);
-      } else {
-        console.error("Failed to fetch workspace members:", error);
-      }
-    }
-    fetchMembers();
-  }, [workspaceId]);
-
     async function handleNewTask() {
-    setInputLoading(true);
-    if (!validateForm()) {
-      setInputLoading(false);
-      return;
+        setInputLoading(true);
+        if (!validateForm()) {
+            setInputLoading(false);
+            return;
+        }
+
+        const { data, error } = await client.from("tasks").insert([{ title, status: status, projectId: projectid, assignedTo: selectedUserId }]).select();
+
+        if (error) {
+            console.error("Error Adding Task:", error);
+            toast.error("Failed to add task");
+        } else {
+            setTitle("");
+            setSelectedUserId(null);
+            toast.success("Task Added successfully!");
+
+            if (onTaskCreated) {
+                await onTaskCreated();
+            }
+        }
+        setInputLoading(false);
     }
-
-    const { data, error } = await client.from("tasks").insert([ { title, status: status, projectId: projectid, assignedTo: selectedUserId }, ]).select();
-
-    if (error) {
-      console.error("Error Adding Task:", error);
-      toast.error("Failed to add task");
-    } else {
-      setTitle("");
-      setSelectedUserId(null);
-      toast.success("Task Added successfully!");
-
-      // 🔥 Refresh tasks so the new card appears
-      if (onTaskCreated) {
-        await onTaskCreated();
-      }
-    }
-    setInputLoading(false);
-  }
-
 
     return (
-       <div className="rounded-lg border w-full bg-gray-100 flex flex-col">
-
-            {/* Header */}
+        <div className="rounded-lg border w-full bg-gray-100 flex flex-col">
             <header className="w-full flex justify-between items-center px-3 py-2">
                 <div className="flex gap-3 items-center">
                     <h1 className="text-gray-800 capitalize">
@@ -119,85 +91,76 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
                 {status != "To do" && (
                     <Popover>
                         <PopoverTrigger render={<Button variant="ghost" className="hover:text-blue-500">
-                                +
-                            </Button>} />
+                            +
+                        </Button>} />
 
-                    <PopoverContent className="w-80">
-                        <div className="grid gap-4">
-                            <div>
-                                <h4 className="font-semibold text-lg">
-                                    Add Task
-                                </h4>
-                                <p className="text-sm text-gray-500">
-                                    Add a new Task to this project.
-                                </p>
-                            </div>
-                            <form>
-                                <div className="grid gap-2">
-                                    <Label>Task title</Label>
-                                    <Input
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        placeholder="Task"
-                                        required
-                                    />
+                        <PopoverContent className="w-80">
+                            <div className="grid gap-4">
+                                <div>
+                                    <h4 className="font-semibold text-lg">
+                                        Add Task
+                                    </h4>
+                                    <p className="text-sm text-gray-500">
+                                        Add a new Task to this project.
+                                    </p>
                                 </div>
-                                <Field className="grid gap-2 mt-2">
-                                    <FieldLabel htmlFor="form-assignTo">Assign to</FieldLabel>
-                                    <Select required value={selectedUserId} onValueChange={setSelectedUserId}>
-                                        <SelectTrigger id="form-assignTo" className="flex items-center gap-2">
-                                            {selectedUser ? (
-                                                // Custom display when a user is selected
-                                                <div className="flex items-center gap-4">
-                                                    <img
-                                                        src={selectedUser.avatar_url}
-                                                        alt={selectedUser.username}
-                                                        className="h-5 w-5 rounded-full"
-                                                    />
-                                                    <span className="text-left">{selectedUser.username}</span>
-                                                </div>
-                                            ) : (
-                                                // Placeholder when nothing is selected
-                                                <span className="text-muted-foreground">Select a user</span>
-                                          
-                                          )}
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {users.map((user) => (
-                                                <SelectItem key={user.id} value={user.id}>
-                                                    <div className="flex items-center gap-2">
+                                <form>
+                                    <div className="grid gap-2">
+                                        <Label>Task title</Label>
+                                        <Input
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            placeholder="Task"
+                                            required
+                                        />
+                                    </div>
+                                    <Field className="grid gap-2 mt-2">
+                                        <FieldLabel htmlFor="form-assignTo">Assign to</FieldLabel>
+                                        <Select required value={selectedUserId} onValueChange={setSelectedUserId}>
+                                            <SelectTrigger id="form-assignTo" className="flex items-center gap-2">
+                                                {selectedUser ? (
+                                                    <div className="flex items-center gap-4">
                                                         <img
-                                                            src={user.avatar_url}
-                                                            alt={user.username}
+                                                            src={selectedUser.avatar_url}
+                                                            alt={selectedUser.username}
                                                             className="h-5 w-5 rounded-full"
                                                         />
-                                                        <span>{user.username}</span>
+                                                        <span className="text-left">{selectedUser.username}</span>
                                                     </div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </Field>
+                                                ) : (
+                                                    <span className="text-muted-foreground">Select a user</span>
+                                                )}
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {users.map((user) => (
+                                                    <SelectItem key={user.id} value={user.id}>
+                                                        <div className="flex items-center gap-2">
+                                                            <img
+                                                                src={user.avatar_url}
+                                                                alt={user.username}
+                                                                className="h-5 w-5 rounded-full"
+                                                            />
+                                                            <span>{user.username}</span>
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </Field>
 
-                                
-
-                                <Button
-                                    className="w-full bg-blue-600 hover:bg-blue-700 mt-5"
-                                    disabled={inputLoading || !isFormValid}
-                                    onClick={handleNewTask}
-                                >
-                                    {inputLoading ? <LoaderCircleIcon className="w-5 h-5 animate-spin" /> : "+ Add Task"}
-                                </Button>
-                            </form>
-
-                        </div>
-                    </PopoverContent>
-                </Popover>)}
+                                    <Button
+                                        className="w-full bg-blue-600 hover:bg-blue-700 mt-5"
+                                        disabled={inputLoading || !isFormValid}
+                                        onClick={handleNewTask}
+                                    >
+                                        {inputLoading ? <LoaderCircleIcon className="w-5 h-5 animate-spin" /> : "+ Add Task"}
+                                    </Button>
+                                </form>
+                            </div>
+                        </PopoverContent>
+                    </Popover>)}
             </header>
 
-            
-
-            {/* Scroll Area */}
             <div className="flex-1 w-full overflow-y-auto overflow-x-hidden px-4 pb-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
                 <ol className="flex flex-col pr-4 gap-3">
                     {
@@ -207,7 +170,6 @@ export default function ProjectBoard({ status, tasks, projectID,onTaskCreated, o
                     }
                 </ol>
             </div>
-
         </div>
     )
 }

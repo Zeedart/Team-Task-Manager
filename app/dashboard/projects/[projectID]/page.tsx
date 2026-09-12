@@ -3,7 +3,7 @@
 import ProjectBoard from "@/components/projectBoard"
 import { useState, useEffect } from "react"
 import client from "@/api/client"
-import type { Project, Tasks } from "../../data/types"
+import type { Project, Tasks, Users } from "../../data/types"
 import type { User } from "@supabase/supabase-js"
 import { notFound, useParams } from "next/navigation"
 import { format, parseISO } from 'date-fns'
@@ -16,10 +16,10 @@ export default function ProjectDetails() {
   const { projectID } = useParams<{ projectID: string }>()
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Tasks[]>([])
+  const [users, setUsers] = useState<Users[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const workspaceId = useWorkspace()
-
 
   const handleUpdateTask = async (taskId: number, newStatus: Tasks['status']) => {
     const taskTitle = tasks.find(t => t.id === taskId)?.title || "Unknown Task"
@@ -33,17 +33,15 @@ export default function ProjectDetails() {
       .update({ status: typedStatus })
       .eq("id", taskId);
 
-      if (error) { 
-        toast.error("Failed to update task status");
-        throw error; 
-      }
+    if (error) {
+      toast.error("Failed to update task status");
+      throw error;
+    }
 
-      setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
-      toast.success("Task status updated");
-      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> changed the status of task <strong>${taskTitle}</strong> in project <strong>${projectTitle}</strong> to <strong>${typedStatus}</strong>`, user, workspaceId)
+    setTasks(prev => prev.map(task => task.id === taskId ? { ...task, status: typedStatus } : task));
+    toast.success("Task status updated");
+    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> changed the status of task <strong>${taskTitle}</strong> in project <strong>${projectTitle}</strong> to <strong>${typedStatus}</strong>`, user, workspaceId)
   }
-
-
 
   const handleDeleteTask = async (taskId: number) => {
     const { error } = await client
@@ -56,13 +54,10 @@ export default function ProjectDetails() {
       throw error;
     }
 
-
     setTasks(prev => prev.filter(task => task.id !== taskId));
     toast.success("Task deleted");
-      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user, workspaceId)
+    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> deleted task in project <strong>${projects.find(p => p.id === tasks.find(t => t.id === taskId)?.projectId)?.title || "Unknown Project"}</strong>`, user, workspaceId)
   };
-
-
 
   useEffect(() => {
     async function getUser() {
@@ -78,12 +73,10 @@ export default function ProjectDetails() {
     getUser()
   }, [])
 
-
   useEffect(() => {
     async function fetchData() {
-      if (!workspaceId) return; 
+      if (!workspaceId) return;
 
-      
       const projectsRes = await client
         .from("projects")
         .select("*")
@@ -98,7 +91,6 @@ export default function ProjectDetails() {
       const projectsData = projectsRes.data ?? [];
       const projectIds = projectsData.map(p => p.id);
 
-
       const tasksRes = await client
         .from("tasks")
         .select("*")
@@ -108,47 +100,53 @@ export default function ProjectDetails() {
         console.error("Error fetching tasks:", tasksRes.error);
       }
 
+      // Fetch workspace members once here instead of once per ProjectBoard column
+      const membersRes = await client
+        .from("workspace_members")
+        .select("user_id, users(*)")
+        .eq("workspace_id", workspaceId);
+
+      if (membersRes.error) {
+        console.error("Failed to fetch workspace members:", membersRes.error);
+      }
+
       setProjects(projectsData);
       setTasks(tasksRes.data ?? []);
+      setUsers(membersRes.data ? membersRes.data.flatMap((m) => m.users) : []);
       setLoading(false);
     }
 
     fetchData();
-  }, [workspaceId]);  
-
+  }, [workspaceId]);
 
   const handleAddTask = async () => {
-  const { data, error } = await client
-    .from("tasks")
-    .select("*")
-    .eq("projectId", Number(projectID)); 
+    const { data, error } = await client
+      .from("tasks")
+      .select("*")
+      .eq("projectId", Number(projectID));
 
-  if (!error) {
-    setTasks(data ?? []);
-    await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> added a new task to <strong>${project?.title}</strong>`, user, workspaceId)
-  }
-};
-
+    if (!error) {
+      setTasks(data ?? []);
+      await handleNewActivity(`<strong>${user?.user_metadata.name}</strong> added a new task to <strong>${project?.title}</strong>`, user, workspaceId)
+    }
+  };
 
   if (loading) {
     return (
       <div className="p-6 h-[30%] w-[80%]">
-        <header>          
+        <header>
           <Skeleton className="h-14  w-90 bg-gray-200 ml-2" />
           <Skeleton className="h-9 w-50 mt-3 bg-gray-200 mb-5 ml-6" />
         </header>
 
-
         <div className="mt-18 ml-10 gap-4 flex">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="w-85 h-60 rounded-lg border bg-gray-100 bg-card text-card-foreground flex flex-col">
-
               <header className="w-full flex justify-between bg-gray-200 items-center px-3 py-2">
                 <div className="flex gap-3 items-center">
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-6" />
                 </div>
-
                 <Skeleton className="h-6 w-6 rounded" />
               </header>
 
@@ -165,7 +163,6 @@ export default function ProjectDetails() {
           ))}
         </div>
       </div>
-
     )
   }
 
@@ -177,17 +174,16 @@ export default function ProjectDetails() {
     return notFound()
   }
 
-  const currentUserId = user?.id
-
   const projectTasks = tasks.filter(
     (task) => task.projectId === project.id
   )
 
-  const curUserTasks = tasks.filter(
-    (task) =>
-      task.assignedTo === currentUserId &&
-      task.projectId === project.id &&
-      task.status !== "Completed"
+  // Fixed: was matching "not completed" instead of actual "To do" status,
+  // which caused In Progress / In Review tasks to also appear here.
+  const currentUserId = user?.id
+
+  const todo = projectTasks.filter(
+    (task) => task.assignedTo === currentUserId
   )
 
   const inReview = projectTasks.filter(
@@ -222,12 +218,11 @@ export default function ProjectDetails() {
       </header>
 
       <div className="mt-6 px-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:gap-6">
-        <ProjectBoard status="To do" tasks={curUserTasks} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-        <ProjectBoard status="In Review" tasks={inReview} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-        <ProjectBoard status="In Progress" tasks={inProgress} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-        <ProjectBoard status="Completed" tasks={completed} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="To do" tasks={todo} users={users} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="In Review" tasks={inReview} users={users} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="In Progress" tasks={inProgress} users={users} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+        <ProjectBoard status="Completed" tasks={completed} users={users} projectID={projectID} onTaskCreated={handleAddTask} onDeleteTask={handleDeleteTask} onUpdateTask={handleUpdateTask} />
       </div>
-
     </div>
   )
 }
