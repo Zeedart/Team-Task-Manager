@@ -15,7 +15,7 @@ import {
 import { BoxIcon } from "@/components/ui/box-icon"
 import { LayersIcon } from "@/components/ui/layers-icon"
 import { RocketIcon } from "@/components/ui/rocket-icon"
-import LOGO from "@/app/images/LOGO.svg"
+import LOGO from "@/app/images/LOGO.png"
 import Image from 'next/image';
 import type { Project, Users } from "@/app/dashboard/data/types.js"
 import { Skeleton } from "@/components/ui/skeleton"
