@@ -67,10 +67,6 @@ Built by **Yazeed Alkalmi** as a portfolio project.
 
 ---
 
-## 📄 License
-
-This project is open for viewing and inspiration. Please do not copy or redistribute without permission.
-
 ## Live Demo
 
 # https://team-task-manager-steel-seven.vercel.app/
